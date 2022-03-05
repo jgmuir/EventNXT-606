@@ -11,7 +11,7 @@ FactoryBot.define do
       end
 
       after(:create) do |user, evaluator|
-        create_list(:event, evaluator.events_count, user: user)
+        create(:image, evaluator.events_count, user: user)
         user.reload
       end
     end
