@@ -1,5 +1,11 @@
 class Event < ApplicationRecord
     has_many :guests, dependent: :destroy
+    has_one_attached :image, dependent: :purge_later
+
+    validates :title, presence: true
+    validates :address, presence: true
+    validates :datetime, presence: true
+    validate :image_format
     
     require 'roo'
     def self.import(file)
@@ -43,4 +49,12 @@ class Event < ApplicationRecord
       return Event.create!({:title => title, :date => "", :total_seats => total_seats, :box_office_customers => box_office_customers, 
           :total_seats_box_office => total_seats_box_office, :total_seats_guest => 0, :balance => balance})
     end
+
+    private
+    def image_format
+      return unless image.attached?
+      return if image.blob.content_type.start_with? 'image/'
+      errors.add(:image, 'needs to be an image')
+    end
+
 end
