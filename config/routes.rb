@@ -12,6 +12,11 @@ Rails.application.routes.draw do
   get 'events/show'
   post 'events/show'
 
+  namespace :api do
+    namespace :v1 do
+      resources :events
+    end
+  end
   
   resources :events do
     resources :guests

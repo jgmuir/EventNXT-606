@@ -1,5 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+  config.log_level = :debug
 
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
@@ -39,17 +40,5 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-  config.action_mailer.delivery_method = :smtp
- 
-  # SMTP settings for gmail
-  config.action_mailer.smtp_settings = {
-   :address              => "smtp.gmail.com",
-   :port                 => 587,
-   :user_name            => 'tmpemailfortesting@gmail.com',
-   :password             => 'simplepassword',
-   :authentication       => "plain",
-  :enable_starttls_auto => true
-  }
-  
-  config.action_mailer.default_url_options = { :host => "c724f07a446c452e9a830e7c64dff91e.vfs.cloud9.us-east-2.amazonaws.com" }
+  config.active_storage.service = :local
 end

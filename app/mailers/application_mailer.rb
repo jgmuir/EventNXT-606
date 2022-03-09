@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'asees@tamu.edu'
+  default from: ENV['DEFAULT_EMAIL']
   layout 'mailer'
 end

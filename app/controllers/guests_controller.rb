@@ -19,7 +19,7 @@ class GuestsController < ApplicationController
     
     GuestMailer.rsvp_invitation_email(event, @guest).deliver_now
 		#end of mail module
-    @guest.update_attribute({:booking_status => 'Invited', :total_booked_num => 0})\
+    @guest.update({:booking_status => 'Invited', :total_booked_num => 0})
     # Guest.update!(params[:id], booking_status: 'Invited')
     flash[:notice] = "The email was successfully sent to #{@guest.first_name} #{@guest.last_name}."
     redirect_to event_path(event)

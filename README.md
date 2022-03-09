@@ -2,6 +2,16 @@
 
 ## Setup
 
+### Email
+
+Get a SendGrid API key or use a free mail service. Create/modify the credential files using
+
+`rails credentials:edit --environment <ENVIRONMENT>`
+
+following the format in `config/credentials.yml` and create/edit the `.env` file following the format in `.env.template`. The default mail service defaults to `EMAIL_DOMAIN`, but can be changed to use `SENDGRID_DOMAIN` by setting `USE_SENDGRID=1` in the `.env` file.
+
+### Docker
+
 Install [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/) for your distribution.
 
 In a terminal, run

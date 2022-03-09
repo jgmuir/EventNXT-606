@@ -16,7 +16,9 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust 
     volumes:
       - unixsck:/var/run/
+      - db:/var/lib/postgresql/data/
 
 volumes:
   unixsck:
+  db:
 
