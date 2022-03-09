@@ -230,7 +230,11 @@ function refresh()
     <%= text_field_tag(:e_title, nil, placeholder: "Event Name", :style => "color: white; background-color: transparent; border: 2px solid white; border-radius: 2px; padding: 5px;") %><br><br>
     <%= text_field_tag(:event_date, nil, placeholder: "MM/DD/YYYY")%><br><br>
     <%= text_field_tag(:event_tickets, nil, placeholder: "Number of Tickets")%><br><br>
+    <%= text_field_tag(:event_address, nil, placeholder: "Address")%><br><br>
 
+    <!-- Change below 1-3 lines to upload an image -->
+    <label for=":event_image">File to upload</label><%= file_field_tag(:event_image) %><br><br>
+    
     <%= text_field_tag(:event_picture, nil, :title => "Right click on image and copy image address to paste here.", placeholder: "Image address or path") %><br><br>
     <%= text_field_tag(:event_picture_size_left, nil, placeholder: "Height: e.g. 300px") %>
     <%= text_field_tag(:event_picture_size_right, nil, placeholder: "Width: e.g. 300px") %><br><br>

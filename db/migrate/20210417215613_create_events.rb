@@ -9,6 +9,7 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.integer :total_seats_box_office
       t.integer :total_seats_guest
       t.integer :balance
+      # add image thing here
     end
   end
 end

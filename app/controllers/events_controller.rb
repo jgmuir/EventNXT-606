@@ -17,6 +17,12 @@ class EventsController < ApplicationController
     session[:event_tickets] = params[:event_tickets]
     $event_tickets = session[:event_tickets]
 
+    session[:event_address] = params[:event_address]
+    $event_address = session[:event_address]
+
+    session[:event_image] = params[:event_image]
+    $event_image = session[:event_image]
+
     session[:event_picture] = params[:event_picture]
     $event_pic = session[:event_picture]
 

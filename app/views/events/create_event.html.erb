@@ -124,12 +124,14 @@ function refresh()
     <div class="ticket" style="background: white; color: black; border: 2px solid white; border-radius: 3px;">
         <h2 id="event-t" style="color: black;"><%= $title_saved.to_s %></h2><br>
         <div id="img">
-        <img id="eventpic" src='<%= $event_pic.to_s %>' height='<%= $event_pic_size_left %>' width='<%= $event_pic_size_right %>'>
+        <p> <%= image_tag($event_image)%> <p>
+        <!--Comment out event pic line, keep for reference for proper use case<img id="eventpic" src='<%= $event_pic.to_s %>' height='<%= $event_pic_size_left %>' width='<%= $event_pic_size_right %>'>-->
         </div>
         <br>
         <p id="event-date"><b>Event date: <%= $event_date.to_s %></b></p>
         <p id="num-tickets"><b>Number of Tickets: <%= $event_tickets.to_s %></b></p>
-        <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p>
+        <p id="event-addr"><b>Event Address: <%=$event_address.to_s %></b></p> <!-- added a non-hardcoded line for the address -->
+        <!-- Comment out this hardcoded line <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p> -->
         <p id="about-event"><strong>About Event: </strong><%= $event_txt.to_s %></p>
         <p style="color: orange;"><strong>NOTE: </strong>Click browser back button to make changes.</p>
     </div><br><br>

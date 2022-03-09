@@ -1,6 +1,9 @@
 class Event < ApplicationRecord
     has_many :guests, dependent: :destroy
     
+    # image upload example coming from: https://medium.com/swlh/how-to-upload-images-into-your-rails-project-using-active-storage-1285a69e4cf5
+    # has_one_attached :image, :dependent => :destroy # not entirely sure what to do with this line yet
+
     require 'roo'
     def self.import(file)
       # Import only the first worksheet, where the first cell is: title - date
