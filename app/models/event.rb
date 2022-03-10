@@ -1,5 +1,8 @@
 class Event < ApplicationRecord
+    belongs_to :users
     has_many :guests, dependent: :destroy
+    has_many :seats, dependent: :destroy
+    has_many :referral_rewards, dependent: :destroy
     
     require 'roo'
     def self.import(file)

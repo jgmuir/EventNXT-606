@@ -1,6 +1,8 @@
-class SeatingType < ApplicationRecord
-  belongs_to :event
-  validates :seat_category, presence: true
-  validates :event_id, presence: true
-  validates :total_seat_count, presence: true
+class Seat < ApplicationRecord
+  belongs_to :events
+  has_many :guests, through: :guest_seat_tickets
+
+  validates :category, presence: true
+  validates :total_count, numericality: {greater_than_or_equal_to: 0, only_integer: true, allow_nil: true}
+  validates :price, numericality: {greater_than_or_equal_to: 0, allow_nil: true}
 end

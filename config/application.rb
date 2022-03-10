@@ -13,6 +13,7 @@ module EventNXT
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    config.autoload_paths += Dir[File.join(Rails.root, 'app', 'models', 'validators')]
     config.logger = Logger.new("log/#{Time.new.strftime('%Y%m%dT%H%M%S')}.log")
     
     if ENV['USE_SENDGRID'].to_i == 1
