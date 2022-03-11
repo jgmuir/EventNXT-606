@@ -6,7 +6,9 @@ class Api::V1::EventsController < Api::V1::ApiController
   end
 
   def create
-    event = Event.create(events_params)
+    p = events_params
+    p[:last_modified] = Time.new
+    event = Event.create(p)
     render_valid(event)
   end
 
@@ -23,8 +25,8 @@ class Api::V1::EventsController < Api::V1::ApiController
 
   private
   def events_params
-    params.permit(:title, :address, :datetime, :image, 
-        :x1, :y1, :x2, :y2, :description)
+    params.permit(:title, :address, :datetime, :description,
+        :image, :x1, :y1, :x2, :y2)
   end
 
   def render_valid(event)

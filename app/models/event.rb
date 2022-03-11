@@ -7,7 +7,9 @@ class Event < ApplicationRecord
 
     validates :title, presence: true
     validates :address, presence: true
+    # todo: validator for datetime > current_date
     validates :datetime, presence: true
+    validates :last_modified, presence: true
     validate :image_format
     
     require 'roo'
