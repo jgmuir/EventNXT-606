@@ -12,9 +12,15 @@ Rails.application.routes.draw do
   get 'events/show'
   post 'events/show'
 
-  namespace :api do
+  namespace :api, except: [:new, :edit] do
     namespace :v1 do
-      resources :events
+      resources :events do
+        resources :guests do
+          get '/invite' => 'guests#invite'
+          patch '/book' => 'guests#book'
+        end
+        resources :seats
+      end
     end
   end
   

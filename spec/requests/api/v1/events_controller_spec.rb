@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::EventsControllers", type: :request do
+RSpec.describe "Api::V1::EventsController", type: :request do
   describe "GET /api/v1/events" do
     pending "should return a json list of all events"
   end

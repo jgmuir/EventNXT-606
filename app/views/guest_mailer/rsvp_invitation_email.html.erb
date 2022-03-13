@@ -43,7 +43,7 @@
         <p><b>Guest Name: <%= @guest.first_name %></b></p>
         <p><b>Event date: <%= $event_date.to_s %></b></p>
         <p><b>Number of tickets: <%= $event_tickets.to_s %></b></p>
-        <p><b>Seat Category: <%= @guest.seat_category %></b></p>
+        <p><b>Seat Category: <%= nil %></b></p>
         <p><strong>About Event: </strong><%= $event_txt.to_s %></p>
         <br><br><br>
         <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https'), :id => 'rsvp-button' %>

@@ -7,9 +7,10 @@
     <h1>Your seat assignment has been confirmed.</h1>
     <p><b>Name: <%= @guest.first_name %> <%= @guest.last_name %></b></p>
     <p><b>Event title: <%= @event.title %></b></p>
-    <p><b>Event date: <%= @event.date %></b></p>
-    <p><b>Ticket Number: <%= @guest.total_booked_num %></b></p>
-    <p><b>Seat Category: <%= @guest.seat_category %></b></p>
+    <p><b>Event date: <%= @event.datetime %></b></p>
+    <%= @guest.seats.select(:category).distinct.each do |category| %>
+      <p><b>Seat Category: <%= category %></b></p>
+    <% end %>
     <p>Thanks for joining and have a great day!</b></p>
   </body>
 </html>

@@ -2,9 +2,9 @@ Hi <%= @guest.first_name %>,
 
 Congratulations! You're invited by <%= @guest.added_by %> to an event.
 Event title: <%= @event.title %>
-Event date: <%= @event.date %>
-Ticket Number: <%= @guest.total_booked_num %>
-Seat Category: <%= @guest.seat_category %>
+Event date: <%= @event.datetime %>
+Ticket Number: <%= nil %>
+Seat Category: <%= nil %>
 
 Please RSVP to confirm attendence with this link: <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https') %>.
 
