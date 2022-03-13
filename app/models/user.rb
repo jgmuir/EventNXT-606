@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_one :guests
+  has_one :guest
   has_many :events
 
   validates :email, presence: true, email: true

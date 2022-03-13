@@ -49,27 +49,29 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.datetime "datetime", null: false
     t.string "description"
     t.datetime "last_modified", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "guest_referral_rewards", force: :cascade do |t|
-    t.bigint "guests_id", null: false
-    t.bigint "referral_rewards_id", null: false
+    t.bigint "guest_id", null: false
+    t.bigint "referral_reward_id", null: false
     t.integer "count", default: 0
-    t.index ["guests_id"], name: "index_guest_referral_rewards_on_guests_id"
-    t.index ["referral_rewards_id"], name: "index_guest_referral_rewards_on_referral_rewards_id"
+    t.index ["guest_id"], name: "index_guest_referral_rewards_on_guest_id"
+    t.index ["referral_reward_id"], name: "index_guest_referral_rewards_on_referral_reward_id"
   end
 
   create_table "guest_seat_tickets", force: :cascade do |t|
-    t.bigint "guests_id", null: false
-    t.bigint "seats_id", null: false
+    t.bigint "guest_id", null: false
+    t.bigint "seat_id", null: false
     t.integer "committed"
     t.integer "allotted"
-    t.index ["guests_id"], name: "index_guest_seat_tickets_on_guests_id"
-    t.index ["seats_id"], name: "index_guest_seat_tickets_on_seats_id"
+    t.index ["guest_id"], name: "index_guest_seat_tickets_on_guest_id"
+    t.index ["seat_id"], name: "index_guest_seat_tickets_on_seat_id"
   end
 
   create_table "guests", force: :cascade do |t|
-    t.bigint "events_id", null: false
+    t.bigint "event_id", null: false
     t.bigint "added_by", null: false
     t.string "email", null: false
     t.string "first_name"
@@ -82,14 +84,14 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.datetime "invited_at"
     t.index ["added_by"], name: "index_guests_on_added_by"
     t.index ["email"], name: "index_guests_on_email", unique: true
-    t.index ["events_id"], name: "index_guests_on_events_id"
+    t.index ["event_id"], name: "index_guests_on_event_id"
   end
 
   create_table "referral_rewards", force: :cascade do |t|
-    t.bigint "events_id", null: false
+    t.bigint "event_id", null: false
     t.string "reward"
     t.integer "min_count", default: 0
-    t.index ["events_id"], name: "index_referral_rewards_on_events_id"
+    t.index ["event_id"], name: "index_referral_rewards_on_event_id"
   end
 
   create_table "seat_category_details", force: :cascade do |t|
@@ -102,11 +104,11 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
   end
 
   create_table "seats", force: :cascade do |t|
-    t.bigint "events_id", null: false
+    t.bigint "event_id", null: false
     t.string "category", null: false
     t.integer "total_count"
     t.float "price"
-    t.index ["events_id"], name: "index_seats_on_events_id"
+    t.index ["event_id"], name: "index_seats_on_event_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -117,21 +119,19 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "events_id"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["events_id"], name: "index_users_on_events_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "guest_referral_rewards", "guests", column: "guests_id"
-  add_foreign_key "guest_referral_rewards", "referral_rewards", column: "referral_rewards_id"
-  add_foreign_key "guest_seat_tickets", "guests", column: "guests_id"
-  add_foreign_key "guest_seat_tickets", "seats", column: "seats_id"
-  add_foreign_key "guests", "events", column: "events_id"
+  add_foreign_key "events", "users"
+  add_foreign_key "guest_referral_rewards", "guests"
+  add_foreign_key "guest_referral_rewards", "referral_rewards"
+  add_foreign_key "guest_seat_tickets", "guests"
+  add_foreign_key "guest_seat_tickets", "seats"
+  add_foreign_key "guests", "events"
   add_foreign_key "guests", "users", column: "added_by"
-  add_foreign_key "referral_rewards", "events", column: "events_id"
-  add_foreign_key "seats", "events", column: "events_id"
-  add_foreign_key "users", "events", column: "events_id"
+  add_foreign_key "referral_rewards", "events"
+  add_foreign_key "seats", "events"
 end

@@ -1,5 +1,5 @@
 class Event < ApplicationRecord
-    belongs_to :users
+    belongs_to :user
     has_many :guests, dependent: :destroy
     has_many :seats, dependent: :destroy
     has_many :referral_rewards, dependent: :destroy
@@ -8,7 +8,7 @@ class Event < ApplicationRecord
     validates :title, presence: true
     validates :address, presence: true
     # todo: validator for datetime > current_date
-    validates :datetime, presence: true
+    validates :datetime, presence: true, expiration: true
     validates :last_modified, presence: true
     validate :image_format
     

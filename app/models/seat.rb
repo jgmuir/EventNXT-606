@@ -1,5 +1,5 @@
 class Seat < ApplicationRecord
-  belongs_to :events
+  belongs_to :event
   has_many :guests, through: :guest_seat_tickets
 
   validates :category, presence: true
