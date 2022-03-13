@@ -61,5 +61,4 @@ class Event < ApplicationRecord
       return if image.blob.content_type.start_with? 'image/'
       errors.add(:image, 'needs to be an image')
     end
-
 end
