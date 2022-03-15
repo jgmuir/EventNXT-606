@@ -8,7 +8,6 @@ RSpec.describe "Api::V1::EventsControllers", type: :request do
   describe 'POST /api/v1/events' do
     it 'should create a new event' do
       p = attributes_for(:event)
-      puts p
       post '/api/v1/events', params: p
       expect(response).to be_successful
     end

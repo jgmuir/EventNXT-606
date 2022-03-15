@@ -23,7 +23,6 @@ RSpec.describe Event, type: :model do
 
   it "has a valid model with title, address, and datetime fields" do
     event = build(:event)
-    puts event.attributes
     expect(event).to be_valid
   end
 end

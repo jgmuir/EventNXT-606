@@ -23,7 +23,6 @@ RSpec.describe Guest, type: :model do
 
   it "has a valid model with at least email, booked status, and added_by" do
     guest = build(:guest)
-    puts guest.attributes
     expect(guest).to be_valid
   end
 end
