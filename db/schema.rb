@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.string "last_name"
     t.string "affiliation"
     t.string "type"
-    t.boolean "booked", default: false, null: false
+    t.boolean "booked"
     t.datetime "invite_expiration"
     t.datetime "referral_expiration"
     t.datetime "invited_at"
