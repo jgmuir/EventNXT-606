@@ -17,6 +17,9 @@ GUESTS_PER_EVENT     = 10
 SEATS_PER_EVENT      = 3
 REWARDS_PER_EVENT    = 3
 
+create :user, email: Rails.application.credentials.admin[:email], password: Rails.application.credentials.admin[:password],
+  created_at: Time.now, updated_at: Time.now
+
 users = create_list :user, N_USERS_WITH_EVENTS
 users.each { |user|
   events = create_list :event, EVENTS_PER_USER, user: user
