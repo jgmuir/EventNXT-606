@@ -8,11 +8,11 @@ FactoryBot.define do
 
     factory :user_with_events do
       transient do
-        events_count {10}
+        n_event { 3 }
       end
 
       after(:create) do |user, evaluator|
-        create_list :event, evaluator.events_count, users: user
+        create_list :event_all, evaluator.n_event, user: user
         user.reload
       end
     end

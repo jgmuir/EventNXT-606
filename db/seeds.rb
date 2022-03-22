@@ -6,11 +6,26 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-# events = [{:title => 'Event Title', :date => '1-Oct-2020', :total_seats => 400, :box_office_customers => '', :total_seats_box_office => 200, :total_seats_guest => 30, :balance => 170},
-#           {:title => 'Event Title', :date => '2-Oct-2020', :total_seats => 400, :box_office_customers => '', :total_seats_box_office => 300, :total_seats_guest => 20, :balance => 80},
-#           {:title => 'Event Title', :date => '3-Oct-2020', :total_seats => 500, :box_office_customers => '', :total_seats_box_office => 250, :total_seats_guest => 30, :balance => 220},
-#   	 ]
+require 'factory_bot_rails'
+include FactoryBot::Syntax::Methods
 
-# events.each do |event|
-#   Event.create!(event)
-# end
+Faker::Config.random = Random.new(42)
+
+N_USERS_WITH_EVENTS  = 3
+EVENTS_PER_USER      = 3
+GUESTS_PER_EVENT     = 10
+SEATS_PER_EVENT      = 3
+REWARDS_PER_EVENT    = 3
+
+users = create_list :user, N_USERS_WITH_EVENTS
+users.each { |user|
+  events = create_list :event, EVENTS_PER_USER, user: user
+  events.each { |event|
+    guests = create_list :guest, GUESTS_PER_EVENT, event: event
+    seats = create_list :seat, SEATS_PER_EVENT, event: event
+    referral_rewards = create_list :referral_reward, REWARDS_PER_EVENT, event: event
+
+    guests.product(seats).each { |guest, seat| create :guest_seat_ticket, guest: guest, seat: seat} 
+    guests.product(referral_rewards).each { |guest, reward| create :guest_referral_reward, guest: guest, referral_reward: reward }
+  }
+}
