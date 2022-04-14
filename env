@@ -1,0 +1,13 @@
+RAILS_ENV=development
+
+DOMAIN=localhost
+
+USE_SENDGRID=1
+SENDGRID_SANDBOX=1
+SENDGRID_PORT=587
+SENDGRID_DOMAIN=smtp.sendgrid.net
+
+EMAIL_DOMAIN=smtp.gmail.com
+EMAIL_PORT=587
+
+DEFAULT_EMAIL=tmpemailfortesting@gmail.com

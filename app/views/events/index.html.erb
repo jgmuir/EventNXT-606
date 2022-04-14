@@ -209,6 +209,20 @@ function refresh()
 </script>
 
 <body>
+  <form method='post' action='http://localhost:3000/api/v1/events'>
+  <input type='number' id='user_id' name='user_id'>
+  <input type='text' id='title' name='title'>
+  <input type='text' id='address' name='address'>
+  <input type='text' id='description' name='description'>
+  <input type='datetime-local' id='datetime', name='datetime'>
+  <input type="hidden" id="last_modified" name="last_modified" value= <%= Time.now %> >
+  <input type='submit'>
+  </form>
+
+  <% @events.each do |event| %>
+    <span style="font-weight: bold"><%= event.title %></span>
+  <% end %>
+
   <section id="panel">
   <br><br>
   <div style="text-align: center;">

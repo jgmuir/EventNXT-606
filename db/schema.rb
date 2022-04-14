@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_08_001540) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_03_08_001540) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -33,7 +32,7 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -46,9 +45,9 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
   create_table "events", force: :cascade do |t|
     t.string "title"
     t.string "address", null: false
-    t.datetime "datetime", null: false
+    t.datetime "datetime", precision: nil, null: false
     t.string "description"
-    t.datetime "last_modified", null: false
+    t.datetime "last_modified", precision: nil, null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
@@ -79,9 +78,9 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.string "affiliation"
     t.string "type"
     t.boolean "booked"
-    t.datetime "invite_expiration"
-    t.datetime "referral_expiration"
-    t.datetime "invited_at"
+    t.datetime "invite_expiration", precision: nil
+    t.datetime "referral_expiration", precision: nil
+    t.datetime "invited_at", precision: nil
     t.index ["added_by"], name: "index_guests_on_added_by"
     t.index ["email"], name: "index_guests_on_email", unique: true
     t.index ["event_id"], name: "index_guests_on_event_id"
@@ -115,10 +114,10 @@ ActiveRecord::Schema.define(version: 2022_03_08_001540) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "created_at", precision: nil, default: "2022-04-14 04:11:01", null: false
+    t.datetime "updated_at", precision: nil, default: "2022-04-14 04:11:01", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
