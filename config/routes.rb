@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post 'events/create_event'
   get 'events/show'
   post 'events/show'
+  # get 'user/:id' => 'events#index'
 
   namespace :api, except: [:new, :edit] do
     namespace :v1 do

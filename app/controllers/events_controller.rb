@@ -2,7 +2,8 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @events = Event.where("user_id = 95").order(title: :asc)
+    # @events = Event.where(params[:user_id]).order(title: :asc)
+    @events = current_user.events.order(title: :asc)
   end
   
   def create_event
