@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   def index
     #@events = Event.all
-    @events = Event.where(user_id: 95) # hardcoded needs to be as some type of param
+    @events = Event.where(user_id: 70) # hardcoded needs to be as some type of param
   end
 
   def show
