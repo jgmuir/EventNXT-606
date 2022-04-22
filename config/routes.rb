@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     resources :guests
   end
 
+  
+
   post '/import_new_spreadsheet' => 'events#import_new_spreadsheet'
   post '/open_existed_spreadsheet'  => 'events#open_existed_spreadsheet', as: :open_existed_spreadsheet
   post '/seat_categories'  => 'events#seat_categories'
