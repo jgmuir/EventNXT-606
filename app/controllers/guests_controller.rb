@@ -40,20 +40,21 @@ class GuestsController < ApplicationController
     end
   end
 
-  # def new
-  #   @event = Event.find(params[:event_id])
-  # end
+  def new
+    @event = Event.find(params[:event_id])
+    @guest = Guest.new
+  end
     
   def create
     @guest = Guest.new(guest_params)
-    @guest.event_id=params[:event_id]
-    puts(@guest.event_id)
-    @guest.save
-    @event = Event.find(params[:event_id])
-    event = Event.find(params[:event_id])
-    # guest.update({:booking_status => 'Not invited', :total_booked_num => 0})
-    # guest = event.guests.create!(guest_params)
-    redirect_to event_path(event)
+    @guest.invited_at = Time.now
+    @guest.invite_expiration = (Time.now + (2*7*24*60*60)) # probably change elsewhere
+    @guest.referral_expiration = (Time.now + (2*7*24*60*60)) # probably change elsewhere
+    #render json: {guest: guest, guest_params: guest_params}
+    if @guest.save!
+      @event = Event.find(@guest.event_id)
+      redirect_to @event
+    end
   end
   
   def edit
@@ -113,8 +114,9 @@ class GuestsController < ApplicationController
   
   private
     def guest_params
-      params.require(:guest).permit(:first_name, :last_name, :event_id, :email_address, :affiliation, 
-        :added_by, :guest_type, :seat_category, :max_seats_num, :booking_status, :total_booked_num)
+      #params.require(:guest).permit(:first_name, :last_name, :event_id, :email_address, :affiliation, 
+      params.permit(:first_name, :last_name, :event_id, :email, :affiliation,
+        :added_by, :guest_type, :seat_category, :max_seats_num, :booked, :total_booked_num)
     end
     
 end

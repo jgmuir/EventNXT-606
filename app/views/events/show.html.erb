@@ -49,6 +49,17 @@
     border-radius: 10px;
     padding: 10px;
   }
+
+  #guest-list-table{
+    display: none;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+  th, td {
+    padding: 10px;
+    width: 100px;
+  }
 </style>
 
 <script>
@@ -62,6 +73,18 @@
   } else {
     button_name.innerHTML = "Open Referral Reward Template";
     button_name.style.background = "lightgreen";
+    x.style.display = "none";
+  }
+}
+
+function guest_table_toggle() {
+  var button_name = document.getElementById("guest-list-table-toggle");
+  var x = document.getElementById("guest-list-table");
+  if(button_name.innerHTML == "Guest-List Table") {
+    button_name.innerHTML = "Close Guest-List Table";
+    x.style.display = "block";
+  } else {
+    button_name.innerHTML = "Guest-List Table";
     x.style.display = "none";
   }
 }
@@ -88,7 +111,48 @@ function refresh() {
 
 <!-- Where both Seat Category and Guest Table will go -->
 
+<!-- first button to edit/add guests -->
 
+<button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
+<div id="guest-list-table">
+  <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table -->
+  <table class="center">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <!--<th>Added By</th>-->
+        <th>Affiliation</th>
+        <th>Ticket Booking Status</th>
+      </tr>
+      <!--<tr>
+        <input type='hidden' id='event_id' name="event_id" value= <%= @event.id %>>
+        <th><input type='text' id='first_name' name='first_name'></th>
+        <th><input type='text' id='last_name' name='last_name'></th>
+        <th><input type='text' id='email' name='email'></th>
+        <th><input type='text' id='added_by' name='added_by'></th>
+        <th><input type='text' id='affiliation' name='affiliation'></th>
+        <input type='hidden' id='booked' value='1'>
+        <input type="hidden" id="invited_at" name="invited_at" value= <%= Time.now %> >
+      </tr>-->
+    </thead>
+    <tbody>
+      <% @guests.each do |guest| %>
+        <tr>
+          <th><%= guest.first_name %></th>
+          <th><%= guest.last_name %></th>
+          <th><%= guest.email %></th>
+          <th><%= guest.affiliation %></th>
+          <th><%= guest.booked %></th>
+          <!--<th><%= guest.added_by %></th>--> <!-- convert this into Yes/No -->
+        </tr>
+      <% end %>
+      
+    </tbody><br>
+    
+  </table>
+</div><br><br>
 
 <h1>Manage Guests</h1><br>
 
@@ -129,7 +193,7 @@ function refresh() {
     <%= submit_tag "Save Changes", :id => "thisone", :class => "btn btn-success btn-rounded" %>
     <% end %>
        
-       <br>
+      <br>
         <%= button_tag "Preview Changes", :id => "thisone", :type => "button", :class => "btn btn-success btn-rounded", :onclick => "refresh()" %>
       <br>
 
