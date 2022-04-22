@@ -6,6 +6,8 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+    @guests = Guest.where(event_id: params[:id])
+    #@guests = Guest.all
   end
 
   def new
