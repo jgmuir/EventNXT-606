@@ -60,6 +60,10 @@
     padding: 10px;
     width: 100px;
   }
+
+  #seating-table{
+    display: none
+  }
 </style>
 
 <script>
@@ -77,14 +81,26 @@
   }
 }
 
-function guest_table_toggle() {
-  var button_name = document.getElementById("guest-list-table-toggle");
-  var x = document.getElementById("guest-list-table");
-  if(button_name.innerHTML == "Guest-List Table") {
-    button_name.innerHTML = "Close Guest-List Table";
+  function guest_table_toggle() {
+    var button_name = document.getElementById("guest-list-table-toggle");
+    var x = document.getElementById("guest-list-table");
+    if(button_name.innerHTML == "Guest-List Table") {
+      button_name.innerHTML = "Close Guest-List Table";
+      x.style.display = "block";
+    } else {
+      button_name.innerHTML = "Guest-List Table";
+      x.style.display = "none";
+    }
+  }
+
+  function seating_table_toggle() {
+  var button_name = document.getElementById("seating-table-toggle");
+  var x = document.getElementById("seating-table");
+  if(button_name.innerHTML == "Seating Levels") {
+    button_name.innerHTML = "Close Seating Levels";
     x.style.display = "block";
   } else {
-    button_name.innerHTML = "Guest-List Table";
+    button_name.innerHTML = "Seating Levels";
     x.style.display = "none";
   }
 }
@@ -111,11 +127,30 @@ function refresh() {
 
 <!-- Where both Seat Category and Guest Table will go -->
 
-<!-- first button to edit/add guests -->
+<!-- button to add seating levels -->
+<button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
+<div id="seating-table">
+  <a href="">Add</a> <!-- clicking here should allow a seating level to be added -->
+  <a href="">Edit</a> <!-- clicking here should allow the levels to be edited -->
+  <table class="center">
+  <tr>
+    <th>Level</th>
+    <th>Capacity</th>
+  </tr>
+  <tbody>
+    <!--
+      <tr>
+        <th>Seating level here</th>
+        <th>Number of seats here</th>
+      </tr>-->
+  </tbody>
+  </table>
+</div><br><br>
+<!-- button to edit/add guests -->
 
 <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
 <div id="guest-list-table">
-  <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table -->
+  <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table, turn into button -->
   <table class="center">
     <thead>
       <tr>
