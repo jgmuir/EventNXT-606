@@ -2,27 +2,17 @@
 
 <p>
   <strong>Seat category:</strong>
-  <%= @seating_type.seat_category %>
+  <%= @seating_type.category %>
 </p>
 
 <p>
   <strong>Total seat count:</strong>
-  <%= @seating_type.total_seat_count %>
+  <%= @seating_type.total_count %>
 </p>
-
-<!--<p>-->
-<!--  <strong>Vip seat count:</strong>-->
-<!--  <%= @seating_type.vip_seat_count %>-->
-<!--</p>-->
-
-<!--<p>-->
-<!--  <strong>Box office seat count:</strong>-->
-<!--  <%= @seating_type.box_office_seat_count %>-->
-<!--</p>-->
 
 <p>
   <strong>Balance seats:</strong>
-  <%= @seating_type.balance_seats %>
+  <%= @seating_type.price %>
 </p>
 
 <p>
@@ -30,6 +20,6 @@
   <%= @seating_type.event.title %>
 </p>
 
-<%= link_to 'Edit', edit_seating_type_path(@seating_type), class:"btn btn-secondary" %> |
+<%= link_to 'Edit', edit_event_seating_type_path(@seating_type), class:"btn btn-secondary" %> |
 <%= link_to 'Back', event_path(@seating_type.event_id), class:"btn btn-secondary" %>
 </div>

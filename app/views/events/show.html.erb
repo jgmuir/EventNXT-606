@@ -130,64 +130,59 @@ function refresh() {
 <!-- button to add seating levels -->
 <button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
 <div id="seating-table">
-  <a href="">Add</a> <!-- clicking here should allow a seating level to be added -->
+  <%= link_to 'Add', new_event_seating_type_url(@event.id) %>
   <a href="">Edit</a> <!-- clicking here should allow the levels to be edited -->
   <table class="center">
   <tr>
-    <th>Level</th>
-    <th>Capacity</th>
+    <th>Category</th>
+    <th>Total Count</th>
   </tr>
   <tbody>
-    <!--
+    <% @seats.each do |seat| %>
       <tr>
-        <th>Seating level here</th>
-        <th>Number of seats here</th>
-      </tr>-->
+        <th><%= seat.category %></th>
+        <th><%= seat.total_count %></th>
+      </tr>
+    <% end %>
   </tbody>
   </table>
 </div><br><br>
 <!-- button to edit/add guests -->
 
-<button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
-<div id="guest-list-table">
-  <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table, turn into button -->
-  <table class="center">
-    <thead>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <!--<th>Added By</th>-->
-        <th>Affiliation</th>
-        <th>Ticket Booking Status</th>
-      </tr>
-      <!--<tr>
-        <input type='hidden' id='event_id' name="event_id" value= <%= @event.id %>>
-        <th><input type='text' id='first_name' name='first_name'></th>
-        <th><input type='text' id='last_name' name='last_name'></th>
-        <th><input type='text' id='email' name='email'></th>
-        <th><input type='text' id='added_by' name='added_by'></th>
-        <th><input type='text' id='affiliation' name='affiliation'></th>
-        <input type='hidden' id='booked' value='1'>
-        <input type="hidden" id="invited_at" name="invited_at" value= <%= Time.now %> >
-      </tr>-->
-    </thead>
-    <tbody>
-      <% @guests.each do |guest| %>
+<% if @seats.length > 0 %>
+  <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
+  <div id="guest-list-table">
+    <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table, turn into button -->
+    <table class="center">
+      <thead>
         <tr>
-          <th><%= guest.first_name %></th>
-          <th><%= guest.last_name %></th>
-          <th><%= guest.email %></th>
-          <th><%= guest.affiliation %></th>
-          <th><%= guest.booked %></th>
-          <!--<th><%= guest.added_by %></th>--> <!-- convert this into Yes/No -->
-        </tr>
-      <% end %>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <!--<th>Added By</th>-->
+          <th>Affiliation</th>
+          <th>Seat Category</th>
+          <th>Action</th>
+          <th>Ticket Booking Status</th>
+      </thead>
+      <tbody>
+        <% @guests.each do |guest| %>
+          <tr>
+            <th><%= guest.first_name %></th>
+            <th><%= guest.last_name %></th>
+            <th><%= guest.email %></th>
+            <th><%= guest.affiliation %></th>
+            <th><%= guest.category %></th>
+            <th><a href="">Send</a><br><a href="">Delete</a></th>
+            <!--<th><%= guest.added_by %></th>--> <!-- convert this into Yes/No -->
+          </tr>
+        <% end %>
+        
+      </tbody><br>
       
-    </tbody><br>
-    
-  </table>
-</div><br><br>
+    </table>
+  </div><br><br>
+<% end %>
 
 <h1>Manage Guests</h1><br>
 
@@ -197,7 +192,7 @@ function refresh() {
   <div style="text-align: center;">
     <br>
     <%= label_tag(:file, "Accepted types: .xlsx") %><br>
-    <%= file_field_tag(:file, :id => "file-button") %><br><br>
+    <%= file_field_tag(:file, :id => "file-button", required: true) %><br><br>
     <%= submit_tag("Import Latest Box Office Data", :class => "button") %>
   </div>
 <% end %>

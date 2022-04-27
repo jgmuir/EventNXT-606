@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :seating_types
+  #resources :seating_types
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -21,13 +21,14 @@ Rails.application.routes.draw do
           patch '/book' => 'guests#book'
         end
         resources :referral_rewards, path: :rewards
-        resources :seats
+        #resources :seats
       end
     end
   end
   
   resources :events do
     resources :guests
+    resources :seating_types
   end
 
   

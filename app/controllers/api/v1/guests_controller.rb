@@ -76,6 +76,15 @@ class Api::V1::GuestsController < Api::V1::ApiController
     head :ok
   end
 
+  def checkin
+    guest = Guest.find(params[:id])
+    if guest.update({checked: true})
+      head :ok
+    else
+      head :unprocessable_entity
+    end
+  end
+
   def email
     # todo: send custom email
   end

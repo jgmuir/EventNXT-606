@@ -1,42 +1,11 @@
-<%= form_with(model: seating_type) do |form| %>
-  <% if seating_type.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(seating_type.errors.count, "error") %> prohibited this seating_type from being saved:</h2>
-
-      <ul>
-      <% seating_type.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+<form method="post" action="http://localhost:3000/events/<%= params[:event_id] %>/seating_types">
   <div class="field form-group">
-    <%= form.label :seat_category %>
-    <%= form.text_field :seat_category, class:"form-control"%>
+    <label>Seat Category</label>
+    <input type="text" name="category">
   </div>
-
   <div class="field form-group">
-    <%= form.label :total_seat_count %>
-    <%= form.number_field :total_seat_count, class:"form-control" %>
+    <label>Total seat count</label>
+    <input type="number" name="total_count">
   </div>
-
-  <div class="field form-group" hidden>
-    <%= form.label :vip_seat_count %>
-    <%= form.number_field :vip_seat_count, class:"form-control", value: 0%>
-  </div>
-
-  <div class="field form-group" hidden>
-    <%= form.label :box_office_seat_count %>
-    <%= form.number_field :box_office_seat_count, class:"form-control", value: 0%>
-  </div>
-
-  <div class="field form-group">
-    <!--<%= form.label :event_id  %>-->
-    <%= form.hidden_field :event_id, class:"form-control"%>
-  </div>
-
-  <div class="actions form-group">
-    <%= form.submit class:"btn btn-secondary"%>
-  </div>
-<% end %>
+  <button type="submit" value="submit" class="button">Create Seat</button>
+</form>

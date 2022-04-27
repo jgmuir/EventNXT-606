@@ -1,11 +1,12 @@
 class EventsController < ApplicationController
   def index
     #@events = Event.all
-    @events = Event.where(user_id: 70) # hardcoded needs to be as some type of param
+    @events = Event.where(user_id: 64) # hardcoded needs to be as some type of param
   end
 
   def show
     @event = Event.find(params[:id])
+    @seats = Seat.where(event_id: params[:id])
     @guests = Guest.where(event_id: params[:id])
     #@guests = Guest.all
   end
@@ -16,6 +17,7 @@ class EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
+    @event.last_modified = Time.now
 
     #render json: {event: event}
     if @event.save
@@ -45,9 +47,18 @@ class EventsController < ApplicationController
     redirect_to root_path
   end
 
+  def import_new_spreadsheet
+    if !params[:file]
+      redirect_to root_path
+    end
+    
+    @event = Event.import(params[:file])
+    redirect_to @event
+  end
+
   private
   def event_params
-    params.permit(:title, :address, :datetime, :image, :description, :box_office, :last_modified, :user_id)
+    params.permit(:title, :address, :datetime, :image, :description, :last_modified, :box_office, :user_id)
   end
 
   def render_valid(event)

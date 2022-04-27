@@ -53,8 +53,9 @@ class Event < ApplicationRecord
       total_seats = 500
       total_seats_guest = 0
       balance = total_seats - total_seats_box_office - total_seats_guest
-      return Event.create!({:title => title, :date => "", :total_seats => total_seats, :box_office_customers => box_office_customers, 
-          :total_seats_box_office => total_seats_box_office, :total_seats_guest => 0, :balance => balance})
+      return Event.create({:title => :title, :datetime => "", :description => "", :last_modified => Time.now, :user_id => 64})
+      #return Event.create!({:title => title, :datetime => "", :total_seats => total_seats, :box_office_customers => box_office_customers, 
+      #    :total_seats_box_office => total_seats_box_office, :total_seats_guest => 0, :balance => balance})
     end
 
     private
