@@ -91,6 +91,10 @@ class GuestsController < ApplicationController
     end
   end
   
+  def delete
+    
+  end
+
   def destroy
     event = Event.find(params[:event_id])
     guest = event.guests.find(params[:id])
