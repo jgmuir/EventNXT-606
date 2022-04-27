@@ -1,0 +1,65 @@
+<div id='guests' data-controller='guest update destroy'
+    data-guest-url-value="/api/v1/events/<%= @event_id %>/guests"
+    data-guest-seaturl-value="/api/v1/events/<%= @event_id %>/seats"
+    data-update-url-value="/api/v1/events/<%= @event_id %>/guests"
+    data-destroy-url-value="/api/v1/events/<%= @event_id %>/guests"
+    data-guest-offset-value=0 data-guest-limit-value=25>
+  <template id='allotments'>
+    <div>
+      <select class='seat_id guest-seat-alloc'></select>
+      <input class='allotted' type='number'>
+      <span class='committed'></span>
+    </div>
+  </template>
+  <template data-guest-target='template'>
+    <tr>
+      <td><input class='id' type='checkbox' name='id' data-destroy-target='destroy' data-update-target='update'></td>
+      <td class='name'><span class='first_name'></span> <span class='last_name'></span></td>
+      <td class='email'></td>
+      <td class='affiliation'></td>
+      <td class='added_by'></td>
+      <td class='category'></td>
+      <td class='allotments'></td>
+      <td>
+        <i class='bi bi-calendar-event invite_expiration' data-guest-target='tooltip'></i>
+        <i class='bi bi-envelope emailed_at' data-guest-target='tooltip'></i>
+        <i class='bi bi-bookmark-check-fill booked'></i>
+      </td>
+      <td><input class='checked' type='checkbox'></td>
+      <td>
+        <div class="dropdown">
+          <button class='btn btn-secondary dropdown-toggle' type='button'
+              data-bs-toggle='dropdown' aria-expanded='false'>
+            Actions
+          </button>
+          <ul class='dropdown-menu'>
+            <li><button class='dropdown-item dropdown-invite-item' type='button'></button></li>
+            <li><button class='dropdown-item dropdown-email-item' type='button'>Send email</button></li>
+            <li><hr class='dropdown-divider'></li>
+            <li><button class='text-danger dropdown-item dropdown-delete-item' type='button'>Delete</button></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </template>
+  <table class="table">
+    <thead>
+      <tr>
+        <th rowspan="2"></th>
+        <th rowspan="2"><span data-bs-toggle='tooltip' data-bs-placement='top' title='123'>Name</span></th>
+        <th rowspan="2">Email</th>
+        <th rowspan="2">Affiliation</th>
+        <th rowspan="2">Added By</th>
+        <th colspan="2">Allocation</th>
+      </tr>
+      <tr>
+        <th>Seat Level</th>
+        <th>Allotment</th>
+        <th>Status</th>
+        <th>Check-in</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody data-guest-target='dom'></tbody>
+  </table>
+</div>

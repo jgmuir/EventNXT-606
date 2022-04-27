@@ -9,7 +9,11 @@ class Api::V1::GuestsController < Api::V1::ApiController
       send_data guests.to_csv, type: 'text/csv', filename: filename
       return json
     end
-    render json: guests
+
+    # render the results with ticket allotments merged in
+    render json: guests.map {|guest|
+      guest.as_json.merge({allotments: guest.guest_seat_tickets.as_json});
+    }
   end
 
   def show
@@ -40,16 +44,6 @@ class Api::V1::GuestsController < Api::V1::ApiController
   end
 
   def book
-    # VIP guest updates RSVP information (Other infos updated by event owner is handled by update_in_place)
-    # {
-    #   :id - guest id
-    #   :seats => {
-    #     {
-    #      :seats_id - seats id,
-    #      :committed - integer
-    #     }
-    #   }
-    # }
     guest = Guest.find(params[:id])
 
     guest.update_attribute :booked, params[:accept].present?

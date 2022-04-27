@@ -2,20 +2,17 @@ import IndexController from "controllers/index_controller";
 
 export default class GuestController extends IndexController {
   static targets = [ 'tooltip' ];
+  static values = { seaturl: String };
 
   query() {
+    this.modifyTemplateWithSeats();
     super.query();
-    // this.adjust();
-    globalThis.a = this;
-    console.log(this);
-    console.log(this.hasTooltipTarget);
-    console.log(this.tooltipTargets);
-    console.log(super.templateTarget);
   }
 
   postProcess() {
     this.genTooltips();
     this.handleBookStatus();
+    this.handleAddedBy();
   }
 
   genTooltips() {
@@ -35,7 +32,6 @@ export default class GuestController extends IndexController {
 
   handleBookStatus() {
     for (const dom of this.element.querySelectorAll('.booked')) {
-      console.log(dom)
       if (dom.textContent === 'false')
         dom.remove();
       else {
@@ -46,7 +42,37 @@ export default class GuestController extends IndexController {
   }
 
   handleAddedBy() {
-    for (const dom of this.element.querySelectorAll('.booked'));
+    for (const dom of this.element.querySelectorAll('.added_by')) {
+      fetch(`/api/v1/users/${dom.textContent}`)
+        .then(response => response.json())
+        .then(data => {
+          dom.textContent = `${data['first_name']} ${data['last_name']}`
+        })
+    }
+  }
+
+  modifyTemplateWithSeats() {
+    console.log("HERE" + this.seaturlValue)
+    fetch(`${this.seaturlValue}`)
+      .then(response => response.json())
+      .then(data => {
+        let template = this.element.querySelector('template#allotments');
+        let templateNode = template.content.cloneNode(true);
+
+        let opts = [];
+        for (const dat of data)
+          opts.push(new Option(dat['category'], dat['id'], false, false));
+
+        let selects = templateNode.querySelectorAll('select.guest-seat-alloc');
+        for (const select of selects) {
+          select.innerHTML = '';
+          for (const opt of opts)
+            select.add(opt);
+        }
+
+        console.log(templateNode.firstElementChild.outerHTML);
+        template.innerHTML = templateNode.firstElementChild.outerHTML;
+      });
   }
 
   get indexController() {
