@@ -1,0 +1,40 @@
+<div id='seats' data-controller='index update destroy dynamic'
+    data-index-url-value="/api/v1/events/<%= @event_id %>/seats"
+    data-update-url-value="/api/v1/events/<%= @event_id %>/seats"
+    data-update-url-value="/api/v1/events/<%= @event_id %>/seats"
+    data-destroy-url-value="/api/v1/events/<%= @event_id %>/seats"
+    data-index-offset-value=0 data-index-limit-value=25>
+  <template id='templ-seat-form' data-index-target='template' data-update-target='template'>
+    <div class='row' data-controller='dynamic'>
+      <form data-action='change->update#sendFromForm'
+          data-update-fields-param='["category", "total_count", "price"]'>
+        <div class='col-1 mt-1 mb-1'><button class='btn btn-sm btn-danger id' data-action='destroy#destroyByValue dynamic#destroy'><i class='bi bi-dash-lg'></i></button></div>
+        <div class='col-sm-auto mt-1 mb-1'><input class='d-inline category input-sm' type='text'></div>
+        <div class='col-sm-auto mt-1 mb-1'><input class='total_count input-sm text-end' type='number' min=0></div>
+        <div class='col-sm-auto mt-1 mb-1'><input class='price input-sm text-end' type='number' min=0></div>
+      </form>
+    </div>
+  </template>
+  <div class='container'>
+    <div class='row'>
+      <div class='col'>
+        <p class='h5'>Category</p>
+      </div>
+      <div class='col'>
+        <p class='h5'>Limit</p>
+      </div>
+      <div class='col'>
+        <p class='h5'>Price</p>
+      </div>
+    </div>
+    <div id='seat-list' data-index-target='dom' data-update-target='dom'></div>
+    <div class='row'>
+      <div class='col-sm-auto'>
+        <button class='btn btn-success' data-action='dynamic#addFromTemplate'
+            data-dynamic-templateId-param='templ-seat-form' data-dynamic-targetId-param='seat-list'>
+          <i class='bi bi-plus'></i>Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

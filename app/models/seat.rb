@@ -1,7 +1,7 @@
 class Seat < ApplicationRecord
   belongs_to :event
 
-  has_many :guest_seat_tickets
+  has_many :guest_seat_tickets, dependent: :destroy
   has_many :guests, through: :guest_seat_tickets
 
   validates :category, presence: true
