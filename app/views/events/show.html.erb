@@ -159,7 +159,7 @@ function refresh() {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
-          <!--<th>Added By</th>-->
+          <th>Added By</th>
           <th>Affiliation</th>
           <th>Seat Category</th>
           <th>Action</th>
@@ -171,10 +171,11 @@ function refresh() {
             <th><%= guest.first_name %></th>
             <th><%= guest.last_name %></th>
             <th><%= guest.email %></th>
+            <th><%= User.find(guest.added_by).email %></th> <!-- corresponds to email, should go to name -->
             <th><%= guest.affiliation %></th>
             <th><%= guest.category %></th>
             <th><a href="">Send</a><br><a href="">Delete</a></th>
-            <!--<th><%= guest.added_by %></th>--> <!-- convert this into Yes/No -->
+            <th><%= guest.booked ? 'Yes':'No' %></th> <!-- convert this into Yes/No -->
           </tr>
         <% end %>
         
