@@ -1,17 +1,16 @@
 class Api::V1::ReferralRewardsController < Api::V1::ApiController
   def index
-    rewards = ReferralReward.where(event_id: params[:event_id]).limit(params[:limit]).offset(params[:offset])
+    rewards = query.limit(params[:limit]).offset(params[:offset])
     render json: rewards
   end
 
   def show
-    reward = ReferralReward.find(params[:id])
+    reward = query.where(
+      'referral_reward_id = :referral_reward_id',
+      {referral_reward_id: params[:id]}
+    ).first
     if reward
-      if params[:guest_id].present?
-        render json: reward.guest_referral_rewards.where(guest_id: params[:guest_id]).first
-      else
-        render json: reward
-      end
+      render json: reward
     else
       render json: reward.errors(), status: :not_found
     end
@@ -42,6 +41,13 @@ class Api::V1::ReferralRewardsController < Api::V1::ApiController
   end
   
   private
+
+  def query
+    ReferralReward.joins(:guest_referral_rewards)
+                  .select('referral_rewards.id, reward, min_count, count(distinct(guest_id)) as qualified')
+                  .group('referral_rewards.id')
+                  .where(['count >= min_count and event_id = :event_id', {event_id: params[:event_id]}])
+  end
 
   def reward_params
     params.permit(:reward, :min_count)
