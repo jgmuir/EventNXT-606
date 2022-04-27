@@ -13,10 +13,14 @@ Rails.application.routes.draw do
     },
     defaults: {format: :json}
 
+  root 'events#index'
   root 'welcome#index'
   post '/login' => 'login#create'
   get '/admin' => 'admin#index'
 
+  # The priority is based upon order of creation: first created -> highest priority.
+  # See how all your routes lay out with "rake routes".
+  # You can have the root of your site routed with "root"
   get 'events/index'
   post 'events/index'
   get 'events/create_event'
@@ -40,13 +44,14 @@ Rails.application.routes.draw do
         end
         resources :email_templates, path: :templates
         resources :referral_rewards, path: :rewards
-        resources :seats
+        #resources :seats
       end
     end
   end
   
   resources :events do
     resources :guests
+    resources :seating_types
   end
 
   

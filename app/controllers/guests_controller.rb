@@ -42,6 +42,7 @@ class GuestsController < ApplicationController
 
   def new
     @event = Event.find(params[:event_id])
+    @seats = Seat.where(event_id: params[:event_id])
     @guest = Guest.new
   end
     
@@ -116,7 +117,7 @@ class GuestsController < ApplicationController
     def guest_params
       #params.require(:guest).permit(:first_name, :last_name, :event_id, :email_address, :affiliation, 
       params.permit(:first_name, :last_name, :event_id, :email, :affiliation,
-        :added_by, :guest_type, :seat_category, :max_seats_num, :booked, :total_booked_num)
+        :added_by, :type, :category, :max_seats_num, :booked, :total_booked_num)
     end
     
 end
