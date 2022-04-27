@@ -174,7 +174,7 @@ function refresh() {
             <th><%= User.find(guest.added_by).email %></th> <!-- corresponds to email, should go to name -->
             <th><%= guest.affiliation %></th>
             <th><%= guest.category %></th>
-            <th><a href="">Send</a><br><a href="">Delete</a></th>
+            <th><a href="">Send</a><br><%= link_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
             <th><%= guest.booked ? 'Yes':'No' %></th> <!-- convert this into Yes/No -->
           </tr>
         <% end %>
