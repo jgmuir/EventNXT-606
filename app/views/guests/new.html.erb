@@ -103,6 +103,14 @@ form{
   <p>
     <label for="affiliation">Affiliation:</label>&nbsp<input type='text' id='affiliation' name='affiliation'><br><br>
   </p>
+  <p>
+    <label for="category">Seat Category:</label>&nbsp<input list="category" name="category">
+    <datalist id="category">
+      <% @seats.each do |seat|%>
+        <option value=<%= seat.category %>></option>
+      <% end %>
+    </datalist><br><br>
+  </p>
     <button type="submit" value="submit" class="button">Add Guest</button>
   </form>
 </div>

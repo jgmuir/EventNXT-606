@@ -19,10 +19,7 @@
     <% @seating_types.each do |seating_type| %>
       <tr>
         <td><%= seating_type.seat_category %></td>
-        <td><%= seating_type.total_seat_count %></td>
-        <td><%= seating_type.vip_seat_count %></td>
-        <td><%= seating_type.box_office_seat_count %></td>
-        <td><%= seating_type.balance_seats %></td>
+        <td><%= seating_type.total_count %></td>
         <!--<td><%= seating_type.event %></td>-->
         <td><%= link_to 'Show', seating_type %></td>
         <td><%= link_to 'Edit', edit_seating_type_path(seating_type) %></td>
