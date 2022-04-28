@@ -211,5 +211,16 @@ function refresh()
   </form>
 </div>
 
+<div id="form-div">
+<h3>Import Box Office Data</h3>
+<%= form_tag import_new_spreadsheet_path, multipart: true  do %> 
+  <div style="text-align: center;">
+    <br>
+    <%= label_tag(:file, "Accepted types: .xlsx") %><br>
+    <%= file_field_tag(:file, :id => "file-button", required: true) %><br><br>
+    <%= submit_tag("Import Latest Box Office Data", :class => "button") %>
+  </div>
+<% end %>
+</div>
 </section>
 </body>

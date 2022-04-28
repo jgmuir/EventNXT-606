@@ -34,7 +34,7 @@ class Api::V1::EventsController < Api::V1::ApiController
 
   private
   def event_params
-    params.permit(:title, :address, :datetime, :image, :description, :box_office, :last_modified, :user_id)
+    params.permit(:title, :address, :datetime, :image, :description, :box_office_customers, :last_modified, :user_id)
         #:image, :box_office, :x1, :y1, :x2, :y2, :user_id)
   end
 

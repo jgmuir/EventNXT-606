@@ -12,7 +12,7 @@ class Event < ApplicationRecord
     validates :datetime, presence: true, expiration: true
     validates :last_modified, presence: true
     validate :validate_image
-    validate :validate_box_office
+    #validate :validate_box_office
     
     require 'roo'
     def self.import(file)
@@ -27,10 +27,24 @@ class Event < ApplicationRecord
       worksheet = worksheets[0]
       
       # parse worksheet: each worksheet includes all customer info of one event on one day
-      title = workbook.cell(1,1)
+      title_date = workbook.cell(1,'A')
+      stringArr = title_date.split(" - ")
+      title = stringArr[0]
+      dateStr = stringArr[1]
+      datetime = Date.parse(dateStr)
+
       # title = first_cell[0][0..-2]
       # date = first_cell[1][1..-1]
-      
+      for event in Event.all
+        if event.title == title
+          # Update the box office spreadsheet of an existing (event, date)
+          event.update({:datetime => :datetime, :title => :title, :description => "should only update, no new"})
+          #event.update({:box_office => box_office_customers})
+          return event
+        else
+          return Event.create({:title => title, :datetime => datetime, :description => title_date, :user_id => 95, :address => "default addr", :last_modified => Time.now})
+        end
+      end
       # read the xlsx file -> process the customer info into one string object box_office_customers
       box_office_customers = []
       workbook.sheet(worksheet).each_row_streaming(pad_cells: true) do |row|
@@ -41,19 +55,11 @@ class Event < ApplicationRecord
       total_seats_box_office = box_office_customers.count() - 1
       box_office_customers = box_office_customers.join('#row#')
       
-      for event in Event.all
-        if event.title == title
-          # Update the box office spreadsheet of an existing (event, date)
-          event.update({:box_office_customers => box_office_customers})
-          return event
-        end
-      end
-      
       # Create a new (event, date) in the database: preset some variables (can be updated)
       total_seats = 500
       total_seats_guest = 0
       balance = total_seats - total_seats_box_office - total_seats_guest
-      return Event.create({:title => :title, :datetime => "", :description => "", :last_modified => Time.now, :user_id => 64})
+      return Event.create({:title => :title, :datetime => "", :description => "", :last_modified => Time.now, :user_id => 95})
       #return Event.create!({:title => title, :datetime => "", :total_seats => total_seats, :box_office_customers => box_office_customers, 
       #    :total_seats_box_office => total_seats_box_office, :total_seats_guest => 0, :balance => balance})
     end

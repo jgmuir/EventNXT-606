@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   def index
     #@events = Event.all
-    @events = Event.where(user_id: 64) # hardcoded needs to be as some type of param
+    @events = Event.where(user_id: 95) # hardcoded needs to be as some type of param
   end
 
   def show
@@ -31,13 +31,14 @@ class EventsController < ApplicationController
   end
 
   def update
-    @event = Event.find(params[:id])
+    render json: {params: params}
+    #@event = Event.find(params[:id])
 
-    if @event.update(event_params)
-      redirect_to @event
-    else
-      render :edit
-    end
+    #if @event.update(event_params)
+    #  redirect_to @event
+    #else
+    #  render :edit
+    #end
   end
 
   def destroy
@@ -51,9 +52,16 @@ class EventsController < ApplicationController
     if !params[:file]
       redirect_to root_path
     end
-    
-    @event = Event.import(params[:file])
-    redirect_to @event
+    #render json: {params: params}
+    @event = Event.import(params[:file]) # update instead
+    #render json: {event: event}
+    #@event = Event.update(params[:file])
+    if @event.new_record?
+      @event.save
+      redirect_to @event
+    else
+      redirect_to @event
+    end
   end
 
   private
