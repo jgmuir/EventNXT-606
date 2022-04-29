@@ -17,7 +17,11 @@ class EventsController < ApplicationController
 
   def create
     par = event_params.to_h
-    par[:user_id] = doorkeeper_token[:resource_owner_id]
+    if doorkeeper_token
+      par[:user_id] = doorkeeper_token[:resource_owner_id]
+    else
+      par[:user_id] = warden.authenticate(scope: :public)
+    end
     @event = Event.new(par)
 
     #render json: {event: event}
