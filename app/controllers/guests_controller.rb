@@ -54,6 +54,7 @@ class GuestsController < ApplicationController
     #render json: {guest: guest, guest_params: guest_params}
     if @guest.save!
       @event = Event.find(@guest.event_id)
+      GuestMailer.rsvp_invitation_email(@event, @guest).deliver_now
       redirect_to @event
     end
   end

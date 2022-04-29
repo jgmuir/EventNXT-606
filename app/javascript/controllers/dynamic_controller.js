@@ -8,6 +8,14 @@ export default class extends Controller {
     this.element.querySelector(`#${targetid}`).appendChild(template);
   }
 
+  updateText(e) {
+    e.currentTarget.textContent = e.params["text"];
+  }
+
+  disable(e) {
+    e.currentTarget.disabled = true;
+  }
+
   destroy() {
     this.element.remove();
   }

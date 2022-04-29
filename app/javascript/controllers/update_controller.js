@@ -5,21 +5,22 @@ export default class extends Controller {
   static values = { url: String };
 
   sendFromForm(e) {
+    e.preventDefault();
     let form = e.currentTarget;
     if (!form.checkValidity())
       return;
 
     let payload = {};
     for (const field of e.params['fields']) {
-      let input = form.querySelector(`input.${field}`);
+      let input = form.querySelector(`input[name="${field}"]`);
       payload[field] = input.value;
     }
 
-    let id = form.querySelector('.id').value;
-    if (id === '')
+    let id = form.querySelector('.id');
+    if (!id || id.value === '')
       this.create(payload);
     else
-      this.update(payload, id);
+      this.update(payload, id.value);
   }
 
   updateBatchFromCheckbox({ params: { payload } }) {

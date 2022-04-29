@@ -16,8 +16,9 @@ class EventsController < ApplicationController
   end
 
   def create
-    @event = Event.new(event_params)
-    @event.last_modified = Time.now
+    par = event_params.to_h
+    par[:user_id] = doorkeeper_token[:resource_owner_id]
+    @event = Event.new(par)
 
     #render json: {event: event}
     if @event.save
@@ -58,7 +59,7 @@ class EventsController < ApplicationController
 
   private
   def event_params
-    params.permit(:title, :address, :datetime, :image, :description, :last_modified, :box_office, :user_id)
+    params.permit(:title, :address, :datetime, :image, :description, :last_modified, :box_office, :user_id, :token)
   end
 
   def render_valid(event)

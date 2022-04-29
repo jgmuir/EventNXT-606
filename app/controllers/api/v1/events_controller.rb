@@ -1,6 +1,6 @@
 class Api::V1::EventsController < Api::V1::ApiController
   def index
-    events = Event.where(user_id: params[:user_id]).limit(params[:limit]).offset(params[:offset])
+    events = Event.where(user_id: current_user.id).limit(params[:limit]).offset(params[:offset])
     render json: events.map{ |event|
       with_attachments(event)
     }
@@ -13,9 +13,9 @@ class Api::V1::EventsController < Api::V1::ApiController
   end
 
   def create
-    #p = event_params
-    #p[:last_modified] = Time.new
-    event = Event.create(event_params)
+    par = event_params.to_h
+    par[:user_id] = current_user.id
+    event = Event.create(par)
     render_valid(event)
     #render json: {params: event_params, event: event}
   end

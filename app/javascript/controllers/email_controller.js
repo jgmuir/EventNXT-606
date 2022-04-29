@@ -1,19 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class IndexController extends Controller {
-  static targets = [ 'dom', 'template', 'limit', 'offset' ];
-  static values = { url: String, offset: Number, limit: Number };
+export default class extends Controller {
+  static targets = [ 'email' ];
+  static values = { url: String };
 
-  connect() { this.query(); }
-
-  query() {
-    let params = new URLSearchParams({
-      offset: this.offsetValue,
-      limit: this.limitValue
-    })
+  email() {
     fetch(`${this.urlValue}?${params.toString()}`, {
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+        method: "POST",
+        body: JSON.stringify(),
       }
     }).then(response => response.json())
       .then(data => {

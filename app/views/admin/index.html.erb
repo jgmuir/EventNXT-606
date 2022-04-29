@@ -3,11 +3,11 @@
     data-index-offset-value=0 data-index-limit-value=10>
   <template data-index-target='template'>
     <tr data-update-target='update'>
-      <td><input class='id' type='checkbox' name='id' data-destroy-target='destroy'></td>
-      <td class='name'><span class='first_name'></span> <span class='last_name'></span></td>
-      <td><input class='is_admin decor' type='checkbox' disabled>
-      <td class='email'></td>
-      <td class='created_at'></td>
+      <td><input data-nxt-id type='checkbox' name='id' data-destroy-target='destroy'></td>
+      <td class='name'><span data-nxt-first_name></span> <span data-nxt-last_name></span></td>
+      <td><input class='decor' data-nxt-is_admin type='checkbox' disabled>
+      <td data-nxt-email></td>
+      <td data-nxt-created_at></td>
     </tr>
   </template>
   <div class='d-flex justify-content-end'>

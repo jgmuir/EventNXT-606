@@ -1,0 +1,33 @@
+<div id='referral' data-controller='index update dynamic'
+    data-index-url-value='/api/v1/events/<%= @event_id %>/refer?token=<%= @token %>'
+    data-update-url-value='/api/v1/events/<%= @event_id %>/refer'>
+  <template data-index-target='template'>
+    <div> 
+      <p>
+        Hello! <b><span data-nxt-first_name></span> <span data-nxt-last_name></span></b>
+        has invited you to <b><span data-nxt-title></span></b>.
+      </p>
+      <div class='card'>
+        <img class='img-fluid' data-nxt-image_url>
+        <div class='card-body'>
+          <h5 class='card-title' data-nxt-title></h5>
+          <h6 class='card-subtitle mb-2 text-muted datetime' data-nxt-datetime></h6>
+          <h6 class='card-subtitle mb-2 text-muted address' data-nxt-address></h6>
+          <p class='card-text description' data-nxt-description></p>
+        </div>
+      </div>
+    </div>
+  </template>
+  <div class='mb-3' data-index-target='dom'></div>
+  <p>
+    Please enter your email to receive your purchase link.
+  </p>
+  <form id='form-referral' data-action='update#sendFromForm' data-update-fields-param='["token", "email"]'>
+    <div class='input-group mb-3'>
+      <input type='hidden' name='token' value='<%= @token %>'>
+      <input type='email' name='email' placeholder='Email'>
+      <button class='btn btn-outline-success' type='submit' value='submit' form='form-referral'
+          data-action='dynamic#updateText dynamic#disable' data-dynamic-text-param='Submitted'>Submit</button>
+    </div>
+  </form>
+</div>

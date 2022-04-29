@@ -6,6 +6,7 @@
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_importmap_tags %>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD15UtHa0mICshgHLTfDPXj8IUCpTCB7MY&libraries=places&callback=initMap" data-turbolinks-eval="false"></script> <!-- GMAP API -->
+  <script>window.process = { env: {} }</script>
 </head>
 <body>
   <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>

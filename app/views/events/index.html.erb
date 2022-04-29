@@ -1,228 +1,60 @@
-<style>
-    body {
-    
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(https://www.teahub.io/photos/full/197-1977791_portland-wallpapers-hd-portland-oregon-city-view.jpg);
-      background-repeat: no-repeat; 
-      background-position: center;
-      background-attachment: fixed; 
-      webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-      height:100%;
-      width:100%; 
-      
-    }
-
-    #panel{
-      padding: 40px;
-      padding-bottom: 100vh;
-    }
-
-    #rsvp-button {
-        -webkit-appearance: button;
-        -moz-appearance: button;
-        appearance: button;
-        padding: 20px;
-        font-size: 20px;
-        text-decoration: none;
-        color: white;
-        background-color: black;
-    }
-
-    .level-contents-toggle{
-      text-align: center;
-    }
-
-    #rsvp-contents-toggle{
-      display: none; 
-      text-align: center; 
-      padding-top: 10px; 
-      padding-bottom: 20px; 
-      background-color: transparent;
-      background-size: cover;
-      background-repeat: no-repeat;
-      border-radius: 10px;
-      padding: 10px;
-      border: 3px solid white;
-      color: white;
-    }
-
-    #rsvp-form{
-      color: black;
-    }
-
-    .level-box{
-      margin-right: 5px;
-    }
-
-    .capacity-box{
-      margin-right: 5px;
-    }
-
-    .ticket {
-            text-align: center;
-            border: 3px solid black;
-            margin: 50px;
-    }
-  
-    #img {
-            position: relative;
-            text-align: center;
-    }
-
-  label{
-    text-align: right;
-  }
-
-  .button {
-  color: white; 
-  background-color: transparent; 
-  border: 2px solid white; 
-  border-radius: 2px; 
-  padding: 5px;
-  font-size: 20px;
-  text-align: center;
-  }
-
-  input {
-  color: white; 
-  background-color: transparent; 
-  border: 2px solid white; 
-  border-radius: 2px; 
-  padding: 5px;
-  font-size: 16px;
-  }
-
-  .button:hover {
-  opacity: 0.5;
-  }
-
-        
-</style>
-
-<script>
-  
-  //JS toggles RSVP Form visibility
-  function toggle_RSVP() {
-  var button_name = document.getElementById("rsvp-prepper");
-  var x = document.getElementById("rsvp-contents-toggle");
-  if (x.style.display == "none") {
-    button_name.innerHTML = "Close Invitation Card";
-    x.style.display = "block";
-  } else {
-    button_name.innerHTML = "Create Invitation Card";
-    button_name.style.background = "transparent";
-    x.style.display = "none";
-  }
-}
-
-  function toggle_levels() {
-  var button_name = document.getElementById("seat-level-prepper");
-  var x = document.getElementById("level-contents-toggle");
-  if (x.style.display === "none") {
-    button_name.innerHTML = "Close Seat Preparer";
-    x.style.display = "block";
-  } else {
-    button_name.innerHTML = "Open Seat Preparer";
-    x.style.display = "none";
-  }
-}
-  //stores levels and capacities for each level
-  var level_capacity = {};
-  document.getElementById("seat-categories").innerHTML = "<h1>Today's date is " + level_capacity + "</h1>"
-
-
-  //store to json file
-  const data = JSON.stringify(level_capacity);
-  
-  
-  
-
-  function new_level(){
-    var add_new = document.getElementById("level-contents-toggle");
-    var del_button = document.createElement("button");
-    var save_button = document.createElement("button");
-    var sub = document.getElementById("levelform");
-    
-    save_button.type = "button";
-    del_button.type = "button";
-    save_button.innerHTML = "Save";
-    del_button.innerHTML = "Delete";
-    
-
-    save_button.onclick = () => {
-      level_capacity[level.value] = capacity.value;
-      console.log(level_capacity)
-    }
-
-    del_button.onclick = () => {
-      level.remove();
-      save_button.remove();
-      capacity.remove();
-      del_button.remove();
-      br.remove();
-      br1.remove();
-      };
-
-
-    var level = document.createElement("input");
-    level.type = "text";
-    level.id = "level-box";
-    level.placeholder = "Enter Level";
-
-    var capacity = document.createElement("input");
-    capacity.type = "text";
-    capacity.id = "capacity-box";
-    capacity.placeholder = "Enter Capacity";
-
-    var br = document.createElement("br");
-    var br1 = document.createElement("br");
-    add_new.appendChild(level);
-    add_new.appendChild(capacity);
-    add_new.appendChild(del_button);
-    add_new.appendChild(save_button);
-    add_new.appendChild(br);
-    add_new.appendChild(br1);
-  
-  }
-
-function refreshTitle()
-{
-  $("#title-tag").load(location.href + " #title-tag");
-  location.reload();
-  
-}
-
-function refresh()
-{
-  // or $('#myform')[0] with jQuery
-  $("#event-t").load(location.href + " #event-t");
-  $("#event-date").load(location.href + " #event-date");
-  $("#num-tickets").load(location.href + " #num-tickets");
-  $("#params-hash").load(location.href + " #params-hash");
-  $("#img").load(location.href + " #img");
-  $("#about-event").load(location.href + " #about-event");
-  console.log("tried to update")
-}
-
-</script>
-
-<body>
-  <section id="panel">
-  <br><br>
-  <div style="text-align: center;">
-  <h1 style="text-align: center; color: white;">Dashboard</h1>
-  <br><br><br>
-  <ul>
-    <% @events.each do |event| %>
-    <li>
-      <a href="/events/<%= event.id %>"> <%= event.title %> </a>
-    </li>
-    <% end %>
-  </ul>
-  <br><br><br>
+<div id='events' data-controller='index update destroy'
+    data-index-url-value='/api/v1/events' data-destroy-url-value='/api/v1/events'
+    data-index-offset-value=0 data-index-limit-value=10>
+  <template data-index-target='template'>
+    <div class='col'>
+      <div class='card'>
+        <img class='img-fluid' data-nxt-image_url>
+        <div class='card-body'>
+          <a href='#' data-nxt-link_><h5 class='card-title' data-nxt-title></h5></a>
+          <h6 class='card-subtitle mb-2 text-muted' data-nxt-datetime></h6>
+          <h6 class='card-subtitle mb-2 text-muted' data-nxt-address></h6>
+          <p class='card-text' data-nxt-description></p>
+        </div>
+        <div class='d-flex align-content-center justify-content-between card-footer'>
+          <p class='m-0'><small class='text-muted'>Last updated <span data-nxt-updated_at></span></small></p>
+          <div class='dropdown'>
+            <button class='btn-sm btn-secondary' data-bs-toggle='dropdown'>
+              <i class='bi bi-three-dots-vertical'></i>
+            </button>
+            <ul class='dropdown-menu'>
+              <li><a class='dropdown-item' data-nxt-box_office_url>Download Box Office</a></li>
+              <li><hr class='dropdown-divider'></li>
+              <li><a class='dropdown-item' data-action='destroy#destroyByValue' data-nxt-id data-nxt-nomod>Delete</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <div class='d-flex justify-content-end'>
+    <label class='me-2' for='size'>Number of results:</label>
+    <select id='size' data-index-target='limit' data-action="index#updateLimit">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
   </div>
-  <br>
-</section>
-</body>
+  <div class="container">
+    <div class='row row-cols-3'>
+      <div data-index-target='dom'></div>
+      <div class='col'>
+        <div class='card text-center align-items-center'>
+          <div class='card-body'>
+            <p class='card-text'><i class='bi bi-plus'></i>Add Event</p>
+            <a href='/events/create_event' class='stretched-link'></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='d-flex justify-content-between'>
+    <div>
+      <button><i class='bi bi-chevron-double-left'></i></button>
+      <button data-action='index#decrementOffset'><i class='bi bi-chevron-left'></i></button>
+      <button data-action='index#incrementOffset'><i class='bi bi-chevron-right'></i></button>
+      <button><i class='bi bi-chevron-double-right'></i></button>
+    </div>
+  </div>
+</div>

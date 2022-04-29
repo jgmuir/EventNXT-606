@@ -61,6 +61,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.datetime "datetime", precision: nil, null: false
     t.string "description"
     t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
@@ -96,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.string "first_name"
     t.string "last_name"
     t.string "affiliation"
+    t.string "category"
     t.string "type"
     t.boolean "booked"
     t.datetime "invite_expiration", precision: nil
