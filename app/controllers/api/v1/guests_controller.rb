@@ -5,7 +5,7 @@ class Api::V1::GuestsController < Api::V1::ApiController
       event_title = Event.find(params[:event_id]).title.gsub ' ', '_'
       filename = "#{event_title}-guests-#{Time.now.strftime('%Y%m%d-%H%M%S')}.csv"
       send_data guests.to_csv, type: 'text/csv', filename: filename
-      return
+      return json
     end
     render json: guests
   end
@@ -32,19 +32,6 @@ class Api::V1::GuestsController < Api::V1::ApiController
       head :ok
     else
       render json: guest.errors(), status: :unprocessable_entity
-    end
-  end
-
-  def refer
-    # todo: use a unique random token rather than guest id
-    guest = Guest.find(params[:guest_id])
-    referral = GuestReferral.new 
-    referral.guest = guest
-    referral.email = params[:email]
-    if referral.save
-      head :ok
-    else
-      render json: referral.errors(), status: :unprocessable_entity
     end
   end
 

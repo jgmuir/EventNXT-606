@@ -1,6 +1,6 @@
 Hi <%= @guest.first_name %>,
 
-Congratulations! You're invited by <%= @guest.added_by %> to an event.
+Congratulations! You're invited by <%= User.find(@guest.added_by).first_name %> to an event.
 Event title: <%= @event.title %>
 Event date: <%= @event.datetime %>
 Ticket Number: <%= nil %>

@@ -17,9 +17,17 @@ export default class extends Controller {
 
   destroyByValue(e) {
     let elem = e.currentTarget;
-    if (elem.value === '')
+    let resource;
+    console.log(elem.value)
+    console.log(elem.getAttribute('data-nxt-id'))
+    if (elem.value) {
+      resource = elem.value;
+    } else if (elem.getAttribute('data-nxt-id')) {
+      resource = elem.getAttribute('data-nxt-id');
+    } else {
       return;
-    fetch(`${this.urlValue}/${elem.value}`, {
+    }
+    fetch(`${this.urlValue}/${resource}`, {
       method: 'DELETE'
     }).then(response => this.indexController.query())
   }

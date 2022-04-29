@@ -1,0 +1,27 @@
+<div id='referral-table' data-controller='index'
+    data-index-url-value='/api/v1/events/<%= @event_id %>/referral_summary'
+    data-index-limit-offset=0 data-index-limit-value=25 style='display: none'>
+  <template data-index-target='template'>
+    <tr>
+      <td><span data-nxt-email></span></td>
+      <td><span data-nxt-first_name></span> <span data-nxt-last_name></span></td>
+      <td><span data-nxt-referred_email></span></td>
+      <td><span data-nxt-status></span></td>
+      <td></td>
+    </tr>
+  </template>
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Referred</th>
+        <th>Status</th>
+        <th>Rewards</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody data-index-target='dom'>
+    </tbody>
+  </table>
+</div>

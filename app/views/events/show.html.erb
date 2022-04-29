@@ -1,7 +1,7 @@
 <style>
     body {
     
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(https://www.teahub.io/photos/full/197-1977791_portland-wallpapers-hd-portland-oregon-city-view.jpg);
+      //background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(https://www.teahub.io/photos/full/197-1977791_portland-wallpapers-hd-portland-oregon-city-view.jpg);
       background-repeat: no-repeat; 
       background-position: center;
       background-attachment: fixed; 
@@ -93,6 +93,18 @@
     }
   }
 
+  function referral_table_toggle() {
+    var button_name = document.getElementById("referral-table-toggle");
+    var x = document.getElementById("referral-table");
+    if(button_name.innerHTML == "Referral Table") {
+      button_name.innerHTML = "Close Referral Table";
+      x.style.display = "block";
+    } else {
+      button_name.innerHTML = "Referral Table";
+      x.style.display = "none";
+    }
+  }
+
   function seating_table_toggle() {
   var button_name = document.getElementById("seating-table-toggle");
   var x = document.getElementById("seating-table");
@@ -149,6 +161,7 @@ function refresh() {
 </div><br><br>
 <!-- button to edit/add guests -->
 
+<h1>Manage Guests</h1><br>
 <% if @seats.length > 0 %>
   <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
   <div id="guest-list-table">
@@ -174,8 +187,8 @@ function refresh() {
             <th><%= User.find(guest.added_by).email %></th> <!-- corresponds to email, should go to name -->
             <th><%= guest.affiliation %></th>
             <th><%= guest.category %></th>
-            <th><a href="">Send</a><br><%= link_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
-            <th><%= guest.booked ? 'Yes':'No' %></th> <!-- convert this into Yes/No -->
+            <th><a href="">Send</a><br><%= button_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
+            <th><%= guest.booked ? 'Yes':'No' %></th> <uu!-- convert this into Yes/No -->
           </tr>
         <% end %>
         
@@ -185,7 +198,10 @@ function refresh() {
   </div><br><br>
 <% end %>
 
-<h1>Manage Guests</h1><br>
+<button id="referral-table-toggle" onclick="referral_table_toggle()">Referral Table</button>
+<%= render 'referral_table' %>
+
+<%= render 'email_modal' %>
 
 <div id="form-div">
 <h3>Import Box Office Data</h3>
@@ -234,7 +250,7 @@ function refresh() {
 
 </div>
 
-<%= link_to "Back", root_path, class:"btn btn-primary" %><br><br> <!-- question if/what this should change to -->
+<%= link_to "Back", '/events', class:"btn btn-primary" %><br><br> <!-- question if/what this should change to -->
 
 
 

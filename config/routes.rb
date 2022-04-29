@@ -13,7 +13,6 @@ Rails.application.routes.draw do
     },
     defaults: {format: :json}
 
-  root 'events#index'
   root 'welcome#index'
   post '/login' => 'login#create'
   get '/admin' => 'admin#index'
@@ -33,7 +32,7 @@ Rails.application.routes.draw do
       resources :users, except: [:create]
       resources :email, only: [:create]
       resources :events do
-        get '/refer' => 'guests#refer'
+        resource :guest_referrals, path: :refer, only: [:show, :create]
         resources :guests do
           member do
             get :invite
@@ -44,12 +43,14 @@ Rails.application.routes.draw do
         end
         resources :email_templates, path: :templates
         resources :referral_rewards, path: :rewards
-        #resources :seats
+        resources :referral_summary, only: [:index]
+        resources :seats
       end
     end
   end
   
   resources :events do
+    resource :refer
     resources :guests
     resources :seating_types
   end

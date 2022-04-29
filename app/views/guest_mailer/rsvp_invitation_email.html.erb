@@ -35,16 +35,16 @@
 
     <p>Hi <%= @guest.first_name %>,</p>
     <p>
-      Congratulations! You're invited by <%= @guest.added_by %> to an event.
+      Congratulations! You're invited by <%= User.find(@guest.added_by).first_name %> to an event.
     </p>
     <div class="ticket">
-        <h2>Event Title: <%= $title_saved.to_s %></h2>
-        <div id="img"><img src='<%= $event_pic.to_s %>' height='<%= $event_pic_size_left.to_s %>' width='<%= $event_pic_size_right.to_s %>'></div>
+        <h2>Event Title: <%= @event.title %></h2>
+        <div id="img"><img src='<%= url_for(@event.image) %>' height='<%= $event_pic_size_left.to_s %>' width='<%= $event_pic_size_right.to_s %>'></div>
         <p><b>Guest Name: <%= @guest.first_name %></b></p>
-        <p><b>Event date: <%= $event_date.to_s %></b></p>
+        <p><b>Event date: <%= @event.datetime %></b></p>
         <p><b>Number of tickets: <%= $event_tickets.to_s %></b></p>
-        <p><b>Seat Category: <%= nil %></b></p>
-        <p><strong>About Event: </strong><%= $event_txt.to_s %></p>
+        <p><b>Seat Category: <%= %></b></p>
+        <p><strong>About Event: </strong><%= @event.description %></p>
         <br><br><br>
         <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https'), :id => 'rsvp-button' %>
         <br><br><br><br>

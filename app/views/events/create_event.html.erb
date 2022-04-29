@@ -185,15 +185,22 @@ function refresh()
   
 }
 
+function loadToken()
+{
+  document.querySelector('input#access_token')
+          .setAttribute('value', localStorage.getItem('access_token'));
+}
 </script>
 
 <h4>Event Creation</h4>
 
 <div id="rsvp-contents">
   <form id="rsvp-form" method='post' action='http://localhost:3000/events'>
-  <p>
-    <label for="user_id">User ID(Temporary):</label>&nbsp<input type='number' id='user_id' name='user_id'><br><br>
-  </p>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <input id="access_token" type="hidden" name="access_token">
+  <script>
+    loadToken();
+  </script>
   <p>
     <label for="title">Event Title:</label>&nbsp<input type='text' id='title' name='title'><br><br>
   </p>
