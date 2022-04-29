@@ -18,6 +18,7 @@ module EventNXT
     # skip deprecation warnings
     config.active_record.legacy_connection_handling = false
     config.active_storage.replace_on_assign_to_many = true
+    config.web_console.development_only = false
 
     log_path = "log/#{Rails.env}.log"
     log_bak_path = "#{log_path}.bak"
