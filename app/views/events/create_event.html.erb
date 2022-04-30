@@ -195,7 +195,7 @@ function loadToken()
 <h4>Event Creation</h4>
 
 <div id="rsvp-contents">
-  <form id="rsvp-form" method='post' action='http://localhost:3000/events'>
+  <form id="rsvp-form" method='post' action='/events'>
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <input id="access_token" type="hidden" name="access_token">
   <script>
