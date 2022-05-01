@@ -48,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.string "name", null: false
     t.string "subject"
     t.string "body", null: false
-    t.boolean "is_html", default: false, null: false
+    t.boolean "is_html", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_email_templates_on_event_id"
