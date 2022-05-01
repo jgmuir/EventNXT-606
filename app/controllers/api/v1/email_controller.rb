@@ -2,9 +2,9 @@ class Api::V1::EmailController < Api::V1::ApiController
   def create
     # prototype functionality: to field is default email while senders are cc'd
     # ideally to field is user email and cc is specified by user
-    senders = User.find(params[:senders])
+    senders = User.find_by(email: params[:senders])
     guests = !params[:all_from].nil? ? Guest.where(event_id: params[:all_from])
-                                     : Guest.where(id: params[:recipients])
+                                     : Guest.where(event_id: params[:event_id], email: params[:recipients])
 
     template = EmailTemplate.find(params[:template_id]) unless params[:template_id].nil?
 
@@ -23,7 +23,7 @@ class Api::V1::EmailController < Api::V1::ApiController
     outbox.each { |mail| mail.deliver_later }
 
     guests.update_all({ emailed_at: Time.now })
-    head :ok
+    render json: guests, only: [:email]
   end
 
   private

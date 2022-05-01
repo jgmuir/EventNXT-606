@@ -1,8 +1,8 @@
-<div id='events' data-controller='index update destroy'
-    data-index-url-value='/api/v1/events' data-destroy-url-value='/api/v1/events'
-    data-index-offset-value=0 data-index-limit-value=10>
-  <template data-index-target='template'>
-    <div class='col'>
+<div id='events' data-controller='event update destroy'
+    data-event-url-value='/api/v1/events' data-destroy-url-value='/api/v1/events'
+    data-event-offset-value=0 data-event-limit-value=10>
+  <template data-event-target='template'>
+    <div class='col-xs-4'>
       <div class='card'>
         <img class='img-fluid' data-nxt-image_url>
         <div class='card-body'>
@@ -29,7 +29,7 @@
   </template>
   <div class='d-flex justify-content-end'>
     <label class='me-2' for='size'>Number of results:</label>
-    <select id='size' data-index-target='limit' data-action="index#updateLimit">
+    <select id='size' data-event-target='limit' data-action="event#updateLimit">
       <option value="10">10</option>
       <option value="25">25</option>
       <option value="50">50</option>
@@ -37,9 +37,8 @@
     </select>
   </div>
   <div class="container">
-    <div class='row row-cols-3'>
-      <div data-index-target='dom'></div>
-      <div class='col'>
+    <div class='row row-cols-3' data-event-target='dom'>
+      <div class='col-xs-4' data-event-target='add'>
         <div class='card text-center align-items-center'>
           <div class='card-body'>
             <p class='card-text'><i class='bi bi-plus'></i>Add Event</p>
@@ -52,8 +51,8 @@
   <div class='d-flex justify-content-between'>
     <div>
       <button><i class='bi bi-chevron-double-left'></i></button>
-      <button data-action='index#decrementOffset'><i class='bi bi-chevron-left'></i></button>
-      <button data-action='index#incrementOffset'><i class='bi bi-chevron-right'></i></button>
+      <button data-action='event#decrementOffset'><i class='bi bi-chevron-left'></i></button>
+      <button data-action='event#incrementOffset'><i class='bi bi-chevron-right'></i></button>
       <button><i class='bi bi-chevron-double-right'></i></button>
     </div>
   </div>

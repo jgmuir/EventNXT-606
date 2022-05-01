@@ -17,6 +17,7 @@ export default class IndexController extends Controller {
       }
     }).then(response => response.json())
       .then(data => {
+          this.preProcess();
           this.domTarget.innerHTML = '';
           if (Array.isArray(data))
             for (const d of data)
@@ -26,6 +27,8 @@ export default class IndexController extends Controller {
           this.postProcess();
       })
   }
+
+  preProcess() {}
 
   postProcess() {}
 

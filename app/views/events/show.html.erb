@@ -187,7 +187,7 @@ function refresh() {
             <th><%= User.find(guest.added_by).email %></th> <!-- corresponds to email, should go to name -->
             <th><%= guest.affiliation %></th>
             <th><%= guest.category %></th>
-            <th><a href="">Send</a><br><%= button_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
+            <th><button data-bs-toggle="modal" data-bs-target="#email-modal" data-bs-recipient=<%= guest.email %>>Send</button><br><%= button_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
             <th><%= guest.booked ? 'Yes':'No' %></th> <uu!-- convert this into Yes/No -->
           </tr>
         <% end %>
@@ -202,6 +202,17 @@ function refresh() {
 <%= render 'referral_table' %>
 
 <%= render 'email_modal' %>
+<%= render 'email_template' %>
+
+<script>
+var emailModal = document.getElementById('email-modal')
+emailModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget
+  var recipient = button.getAttribute('data-bs-recipient')
+  var modalInput = emailModal.querySelector('#email-to')
+  modalInput.value = recipient
+})
+</script>
 
 <div id="form-div">
 <h3>Import Box Office Data</h3>

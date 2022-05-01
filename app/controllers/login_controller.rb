@@ -5,7 +5,6 @@ class LoginController < Doorkeeper::TokensController
       addtl.merge!({ scope: 'admin' })
     end
     self.request.params.merge!(addtl)
-    Rails.logger.debug params.to_unsafe_h
     super
   end
 

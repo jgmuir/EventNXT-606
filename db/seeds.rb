@@ -12,27 +12,27 @@ include FactoryBot::Syntax::Methods
 # Applications
 
 Doorkeeper::Application.create(name: 'Web', redirect_uri: '')
-
-Faker::Config.random = Random.new(42)
-
-N_USERS_WITH_EVENTS  = 3
-EVENTS_PER_USER      = 3
-GUESTS_PER_EVENT     = 10
-SEATS_PER_EVENT      = 3
-REWARDS_PER_EVENT    = 3
-
 create :user, email: Rails.application.credentials.admin[:email], password: Rails.application.credentials.admin[:password],
   is_admin: true, created_at: Time.now, updated_at: Time.now
 
-users = create_list :user, N_USERS_WITH_EVENTS
-users.each { |user|
-  events = create_list :event, EVENTS_PER_USER, user: user
-  events.each { |event|
-    guests = create_list :guest, GUESTS_PER_EVENT, event: event
-    seats = create_list :seat, SEATS_PER_EVENT, event: event
-    referral_rewards = create_list :referral_reward, REWARDS_PER_EVENT, event: event
+if Rails.env == 'development'
+  Faker::Config.random = Random.new(42)
+  N_USERS_WITH_EVENTS  = 3
+  EVENTS_PER_USER      = 3
+  GUESTS_PER_EVENT     = 10
+  SEATS_PER_EVENT      = 3
+  REWARDS_PER_EVENT    = 3
 
-    guests.product(seats).each { |guest, seat| create :guest_seat_ticket, guest: guest, seat: seat} 
-    guests.product(referral_rewards).each { |guest, reward| create :guest_referral_reward, guest: guest, referral_reward: reward }
+  users = create_list :user, N_USERS_WITH_EVENTS
+  users.each { |user|
+    events = create_list :event, EVENTS_PER_USER, user: user
+    events.each { |event|
+      guests = create_list :guest, GUESTS_PER_EVENT, event: event
+      seats = create_list :seat, SEATS_PER_EVENT, event: event
+      referral_rewards = create_list :referral_reward, REWARDS_PER_EVENT, event: event
+
+      guests.product(seats).each { |guest, seat| create :guest_seat_ticket, guest: guest, seat: seat} 
+      guests.product(referral_rewards).each { |guest, reward| create :guest_referral_reward, guest: guest, referral_reward: reward }
+    }
   }
-}
+end

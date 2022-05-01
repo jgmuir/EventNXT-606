@@ -6,7 +6,7 @@ class EmailTemplates < ActiveRecord::Migration[7.0]
       t.string :name, null: false
       t.string :subject
       t.string :body, null: false
-      t.boolean :is_html, null: false, default: false
+      t.boolean :is_html, default: false
       t.timestamps
     end
   end

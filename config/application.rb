@@ -21,11 +21,7 @@ module EventNXT
     config.web_console.development_only = false
 
     log_path = "log/#{Rails.env}.log"
-    log_bak_path = "#{log_path}.bak"
-    begin
-      FileUtils.cp(log_path, log_bak_path)
-    rescue; end
-    config.logger = Logger.new(log_path)
+    config.logger = Logger.new(log_path, 2)
     
     if ENV['USE_SENDGRID'].to_i == 1
       config.action_mailer.smtp_settings = {

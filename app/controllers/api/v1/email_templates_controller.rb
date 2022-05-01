@@ -11,7 +11,9 @@ class Api::V1::EmailTemplatesController < Api::V1::ApiController
 
   def create
     process_template_params
-    template = EmailTemplate.new template_params
+    par = template_params.to_h
+    par[:user_id] = current_user.id 
+    template = EmailTemplate.new par
     if template.save
       render json: with_attachments(template)
     else
