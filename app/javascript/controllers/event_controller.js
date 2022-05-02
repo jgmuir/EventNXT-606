@@ -7,6 +7,11 @@ export default class EventController extends IndexController {
     this.addTmp = this.addTarget.cloneNode(true)
   }
 
+  redirect({detail}) {
+    console.log(detail)
+    window.location = `/events/${detail['id']}`
+  }
+
   postProcess() {
     this.domTarget.append(this.addTmp)
   }

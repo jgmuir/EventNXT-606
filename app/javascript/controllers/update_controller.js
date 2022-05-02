@@ -10,11 +10,10 @@ export default class extends Controller {
     if (!form.checkValidity())
       return;
 
-    let payload = {};
-    for (const field of e.params['fields']) {
-      let input = form.querySelector(`input[name="${field}"]`);
-      payload[field] = input.value;
-    }
+    let payload = new FormData(form);
+    payload.delete('id')
+    payload.delete('access_token');
+    payload.delete('authenticity_token');
 
     let id = form.querySelector('.id');
     if (!id || id.value === '')
@@ -30,12 +29,14 @@ export default class extends Controller {
         if (!checkbox.checked) 
           return;
         fetch(`${this.urlValue}/${checkbox.value}`, {
-          headers: new Headers({'content-type': 'application/json'}),
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'content-type': 'application/json'
+          },
           method: 'PATCH',
           body: JSON.stringify(payload)
         }).then(response => response.json())
           .then(data => {
-          console.log(this.fillTemplate(data, elem));
           elem.replaceWith(this.fillTemplate(data, elem));
         });
         checkbox.checked = false;
@@ -45,18 +46,25 @@ export default class extends Controller {
 
   create(payload) {
     fetch(`${this.urlValue}`, {
-      headers: new Headers({'content-type': 'application/json'}),
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
       method: 'POST',
-      body: JSON.stringify(payload)
-    })
+      body: payload
+    }).then(response => response.json())
+      .then(data => this.dispatch('created', {detail: data}))
   }
 
   update(payload, id) {
     fetch(`${this.urlValue}/${id}`, {
-      headers: new Headers({'content-type': 'application/json'}),
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
       method: 'PATCH',
-      body: JSON.stringify(payload)
-    })
+      body: payload
+    }).then(response => response.json())
+      .then(data => this.dispatch('updated', {detail: data}))
+
   }
 
   fillTemplate(obj, template) {

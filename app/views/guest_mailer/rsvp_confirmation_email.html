@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Your seat assignment has been confirmed.</h1>
+    <p><b>Name: {{guest.first_name}} {{guest.last_name}} </b></p>
+    <p><b>Event title: {{event.title}} </b></p>
+    <p><b>Event date: {{event.datetime}} </b></p>
+    {{#seats}}
+    <p><b>Seat Category: {{category}}</b></p>
+    {{/seats}}
+    <p>
+      Please refer your friends using the link
+      <a href='/refer?token={{guest.id}}'>Event</a>. You may receive
+    </p>
+    <ul>
+      {{#referral_rewards}}
+      <li>{{reward}} (min: {{min_count}}) referrals</li>
+      {{/referral_rewards}}
+    </ul
+    <p>Thanks for joining and have a great day!</b></p>
+  </body>
+</html>
