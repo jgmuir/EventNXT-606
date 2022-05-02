@@ -1,5 +1,4 @@
-<!-- unneeded, moved to the events/show.html.erb -->
-<form method="post" action="http://localhost:3000/events/<%= params[:event_id] %>/seating_types">
+<form method="post" action="/events/<%= params[:event_id] %>/seating_types">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <div class="field form-group">
     <label>Seat Category</label>

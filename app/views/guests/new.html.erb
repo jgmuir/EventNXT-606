@@ -88,7 +88,7 @@ form{
 <body>
 <section>
 <div id="new-guests">
-  <form id="guest-form" method='post' action='http://localhost:3000/events/<%= @event.id %>/guests'>
+  <form id="guest-form" method='post' action='/events/<%= @event.id %>/guests'>
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <input type="hidden" id="event_id" name="event_id" value=<%= @event.id %>>
   <input type="hidden" id="added_by" name="added_by" value=<%= @event.user_id %>>
