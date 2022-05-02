@@ -195,28 +195,44 @@ function loadToken()
 <h4>Event Creation</h4>
 
 <div id="rsvp-contents">
-  <form id="rsvp-form" method='post' action='/events'>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <input id="access_token" type="hidden" name="access_token">
-  <script>
-    loadToken();
-  </script>
-  <p>
-    <label for="title">Event Title:</label>&nbsp<input type='text' id='title' name='title'><br><br>
-  </p>
-  <p>
-    <label for="address">Event Address:</label>&nbsp<input type='text' id='address' name='address'><br><br> <!-- https://github.com/kristianmandrup/gmaps-autocomplete-rails link for GMaps integration - might be too old for use -->
-  </p>
-  <p>
-    <label for="description">Event Description:</label>&nbsp<input type='text' id='description' name='description'><br><br>
-  </p>
-  <p>
-    <label for="datetime">Event Date:</label>&nbsp<input type='datetime-local' id='datetime', name='datetime'><br><br>
-  </p>
+  <form id="rsvp-form" method='post' action='/api/v1/events'>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input id="access_token" type="hidden" name="access_token">
+    <script>
+      loadToken();
+    </script>
+    <p>
+      <label for="title">Event Title:</label>&nbsp<input type='text' id='title' name='title'><br><br>
+    </p>
+    <p>
+      <label for="address">Event Address:</label>&nbsp<input type='text' id='address' name='address'><br><br> <!-- https://github.com/kristianmandrup/gmaps-autocomplete-rails link for GMaps integration - might be too old for use -->
+    </p>
+    <p>
+      <label for="description">Event Description:</label>&nbsp<input type='text' id='description' name='description'><br><br>
+    </p>
+    <p>
+      <label for="datetime">Event Date:</label>&nbsp<input type='datetime-local' id='datetime', name='datetime'><br><br>
+    </p>
     <!--<label for=":image">File to upload</label><%= file_field_tag(:image) %><br><br> Image is not working currently-->
-    <button type="submit" value="submit" class="button">Create Event</button>
+    <button id='rsvp-submit' type="submit" value="submit" class="button">Create Event</button>
   </form>
 </div>
+
+<script>
+function submitRedirect(e) {
+  e.preventDefault();
+  let form = document.querySelector('form#rsvp-form');
+  fetch(form.action, {
+    headers: {
+      "Authorization": "Bearer " + localStorage.getItem("access_token"),
+    },
+    method: 'POST',
+    body: new FormData(form),
+  }).then(response => response.json())
+    .then(data => window.location = `/events/${data['id']}`)
+}
+document.querySelector('button#rsvp-submit').addEventListener('submit', submitRedirect)
+</script>
 
 </section>
 </body>

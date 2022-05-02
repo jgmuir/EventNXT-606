@@ -162,6 +162,10 @@ function refresh() {
 <!-- button to edit/add guests -->
 
 <h1>Manage Guests</h1><br>
+
+<%= render 'email_template' %>
+<%= render 'email_modal' %>
+
 <% if @seats.length > 0 %>
   <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
   <div id="guest-list-table">
@@ -200,9 +204,6 @@ function refresh() {
 
 <button id="referral-table-toggle" onclick="referral_table_toggle()">Referral Table</button>
 <%= render 'referral_table' %>
-
-<%= render 'email_modal' %>
-<%= render 'email_template' %>
 
 <script>
 var emailModal = document.getElementById('email-modal')

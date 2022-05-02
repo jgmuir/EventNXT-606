@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import IndexController from "./index_controller";
 
 export default class extends Controller {
   static targets = [ 'destroy' ];
@@ -20,7 +21,7 @@ export default class extends Controller {
     let resource;
     console.log(elem.value)
     console.log(elem.getAttribute('data-nxt-id'))
-    if (elem.value) {
+    if (elem.value && elem.value !== '') {
       resource = elem.value;
     } else if (elem.getAttribute('data-nxt-id')) {
       resource = elem.getAttribute('data-nxt-id');
@@ -29,10 +30,7 @@ export default class extends Controller {
     }
     fetch(`${this.urlValue}/${resource}`, {
       method: 'DELETE'
-    }).then(response => this.indexController.query())
-  }
-
-  get indexController() {
-    return this.application.getControllerForElementAndIdentifier(this.element, "index")
+    }).then(response => this.dispatch('deleted', { detail: 'hello'}))
+    console.log('destroy');
   }
 }

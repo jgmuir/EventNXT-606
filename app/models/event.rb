@@ -3,6 +3,7 @@ class Event < ApplicationRecord
     has_many :guests, dependent: :destroy
     has_many :seats, dependent: :destroy
     has_many :referral_rewards, dependent: :destroy
+    has_many :email_templates, dependent: :destroy
     has_one_attached :image, dependent: :purge_later
     has_one_attached :box_office, dependent: :purge_later
 

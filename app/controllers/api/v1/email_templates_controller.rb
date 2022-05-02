@@ -10,6 +10,8 @@ class Api::V1::EmailTemplatesController < Api::V1::ApiController
   end
 
   def create
+    render json: {message: 'No bearer token'}, status: :forbidden and return unless current_user
+
     process_template_params
     par = template_params.to_h
     par[:user_id] = current_user.id 
