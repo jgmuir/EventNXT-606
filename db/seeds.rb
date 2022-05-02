@@ -6,16 +6,18 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-require 'factory_bot_rails'
-include FactoryBot::Syntax::Methods
-
 # Applications
 
 Doorkeeper::Application.create(name: 'Web', redirect_uri: '')
-create :user, email: Rails.application.credentials.admin[:email], password: Rails.application.credentials.admin[:password],
-  is_admin: true, created_at: Time.now, updated_at: Time.now
+User.create first_name: "admin", last_name: "nimda",
+            email: Rails.application.credentials.admin[:email],
+            password: Rails.application.credentials.admin[:password],
+            is_admin: true
 
 if Rails.env == 'development'
+  require 'factory_bot_rails'
+  include FactoryBot::Syntax::Methods
+
   Faker::Config.random = Random.new(42)
   N_USERS_WITH_EVENTS  = 3
   EVENTS_PER_USER      = 3
