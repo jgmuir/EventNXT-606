@@ -8,9 +8,9 @@
     <p><b>Name: {{guest.first_name}} {{guest.last_name}} </b></p>
     <p><b>Event title: {{event.title}} </b></p>
     <p><b>Event date: {{event.datetime}} </b></p>
-    {{#seats}}
-    <p><b>Seat Category: {{category}}</b></p>
-    {{/seats}}
+    {{#tickets}}
+    <p><b>Seat Category: {{seat.category}}</b> {{committed}}</p>
+    {{/tickets}}
     <p>
       Please refer your friends using the link
       <a href='/refer?token={{guest.id}}'>Event</a>. You may receive

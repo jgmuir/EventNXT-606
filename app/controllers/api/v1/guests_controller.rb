@@ -1,4 +1,6 @@
 class Api::V1::GuestsController < Api::V1::ApiController
+  include Api::V1::EmailHelper
+
   def index
     guests = Guest.where(event_id: params[:event_id]).limit(params[:limit]).offset(params[:offset])
     if params.has_key? :download
@@ -27,7 +29,9 @@ class Api::V1::GuestsController < Api::V1::ApiController
       return
     end
     
-    GuestMailer.rsvp_invitation_email(guest.event, guest).deliver_now
+    # GuestMailer.rsvp_invitation_email(guest.event, guest).deliver_now
+    template = EmailTemplate.where(name: "RSVP Invitation").first
+    gen_email_from_template([current_user.email], guest.email, template)
     if guest.update({:invited_at => Time.now})
       head :ok
     else
@@ -66,7 +70,8 @@ class Api::V1::GuestsController < Api::V1::ApiController
     }
 
     # todo: customize which and how many tickets were comitted
-    GuestMailer.rsvp_confirmation_email(event, guest).deliver
+    template = EmailTemplate.where(name: "RSVP Confirmation").first
+    gen_email_from_template([current_user.email], guest.email, template)
     head :ok
   end
 

@@ -7,17 +7,17 @@
 
     <p>Hi {{guest.first_name}} {{guest.last_name}},</p>
     <p>
-      Congratulations! You're invited by {{user.email}} to an event.
+      Congratulations! You're invited by {{sender.first_name}} {{sender.last_name}} to an event.
     </p>
     <div class="ticket">
         <h2>Event Title: {{event.title}}</h2>
         <!--<div id="img"><img src='{{event.image.url}}'></div>-->
         <p><b>Guest Name: {{guest.first_name}} {{guest.last_name}}</b></p>
         <p><b>Event date: {{event.datetime}}</b></p>
-        {{#guest_seat_tickets}}
+        {{#tickets}}
         <p><b>Seat Category: {{category}}</b> <b>Amount: {{committed}}</b></p>
-        {{/guest_seat_tickets}}
-        <p><strong>About Event: </strong>{{event.description}}</p>
+        {{/tickets}}
+        <p><strong>About Event:</strong> {{event.description}}</p>
         <br><br><br>
         <p><a href='{{rsvp_link}}'>RSVP</a></p>
         <br><br><br><br>

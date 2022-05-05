@@ -72,6 +72,7 @@ class Api::V1::EmailTemplatesController < Api::V1::ApiController
     else
       params.extract! :is_html
     end
+    return true;
   end
 
   def template_params
