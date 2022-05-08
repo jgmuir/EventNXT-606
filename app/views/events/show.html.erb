@@ -136,7 +136,9 @@ function refresh() {
 <section>
 <h1><%= @event.title %></h1>
 
-<img class='w-25' src='<%= url_for(@event.image) if @event.image.attached? %>' alt='Event image'>
+<% if @event.image.attached? %>
+<img class='w-25' src='<%= url_for(@event.image) %>' alt='Event image'>
+<% end %>
 <!--<h2>The Control Room</h2>-->
 <p>Event Date: <%=@event.datetime %></p> <!-- format this to look nicer -->
 <p>Address: <%=@event.address %></p> <!-- <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p> Example of what addr should look like--> 
