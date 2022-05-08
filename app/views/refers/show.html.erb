@@ -1,7 +1,8 @@
-<div id='referral' data-controller='index update dynamic'
-    data-index-url-value='/api/v1/events/<%= @event_id %>/refer?token=<%= @token %>'
-    data-update-url-value='/api/v1/events/<%= @event_id %>/refer'>
-  <template data-index-target='template'>
+<div id='referral' data-controller='refer update'
+    data-refer-url-value='/api/v1/events/<%= @event_id %>/refer?token=<%= @token %>'
+    data-update-url-value='/api/v1/events/<%= @event_id %>/refer'
+    data-action='update:created->refer#disableSubmit'>
+  <template data-refer-target='template'>
     <div> 
       <p>
         Hello! <b><span data-nxt-first_name></span> <span data-nxt-last_name></span></b>
@@ -18,16 +19,16 @@
       </div>
     </div>
   </template>
-  <div class='mb-3' data-index-target='dom'></div>
+  <div class='mb-3' data-refer-target='dom'></div>
   <p>
     Please enter your email to receive your purchase link.
   </p>
-  <form id='form-referral' data-action='update#sendFromForm' data-update-fields-param='["token", "email"]'>
+  <form id='form-referral' data-action='update#sendFromForm'>
     <div class='input-group mb-3'>
       <input type='hidden' name='token' value='<%= @token %>'>
       <input type='email' name='email' placeholder='Email'>
       <button class='btn btn-outline-success' type='submit' value='submit' form='form-referral'
-          data-action='dynamic#updateText dynamic#disable' data-dynamic-text-param='Submitted'>Submit</button>
+          data-refer-target='submit' data-action='dynamic#updateText' data-dynamic-text-param='Submitted'>Submit</button>
     </div>
   </form>
 </div>

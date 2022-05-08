@@ -1,3 +1,7 @@
+<% content_for :nav do %>
+  <%= render 'layouts/nav' %>
+<% end %>
+
 <div id='events' data-controller='event update destroy' data-action='update:created->event#redirect destroy:deleted->event#query'
     data-event-url-value='/api/v1/events' data-update-url-value='/api/v1/events' data-destroy-url-value='/api/v1/events'
     data-event-offset-value=0 data-event-limit-value=10>

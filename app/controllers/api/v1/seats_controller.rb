@@ -53,6 +53,6 @@ class Api::V1::SeatsController < Api::V1::ApiController
 
     # Only allow a list of trusted parameters through.
     def seats_params
-      params.require(:seats).permit(:category, :total_count, :price)
+      params.permit(:category, :total_count, :price)
     end
 end

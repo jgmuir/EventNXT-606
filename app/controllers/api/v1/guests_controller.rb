@@ -7,7 +7,7 @@ class Api::V1::GuestsController < Api::V1::ApiController
       event_title = Event.find(params[:event_id]).title.gsub ' ', '_'
       filename = "#{event_title}-guests-#{Time.now.strftime('%Y%m%d-%H%M%S')}.csv"
       send_data guests.to_csv, type: 'text/csv', filename: filename
-      return json
+      return
     end
 
     # render the results with ticket allotments merged in
@@ -54,18 +54,17 @@ class Api::V1::GuestsController < Api::V1::ApiController
       return
     end
 
-    params_confirm = params.require(:seats).permit([:seat_id, :committed])
-
     event = Event.find(params[:event_id])
-    seats = params_confirm[:seats].to_h
+    committments = params['seat_id'].zip(params['committed'])
+    logger.debug committments
 
-    seats.each {|_, h| 
-      guest.seats.where(guest_id: params[:id], seat_id: h[:seat_id]).update_all(committed: h[:committed])
+    committments.each {|arr| 
+      guest.guest_seat_tickets.where(guest_id: params[:id], seat_id: arr[0]).update_all(committed: arr[1])
     }
 
-    # todo: customize which and how many tickets were comitted
-    template = EmailTemplate.where(name: "RSVP Confirmation").first
-    gen_email_from_template([current_user.email], guest.email, template)
+    template = EmailTemplate.where(name: "RSVP Confirmation", event_id: params[:event_id]).first
+    outbox = gen_email_from_template([event.user], [guest], template)
+    outbox.each { |mail| mail.deliver_later }
     head :ok
   end
 
@@ -109,13 +108,15 @@ class Api::V1::GuestsController < Api::V1::ApiController
     params.permit(
       :email, :first_name, :last_name, :affiliation, :type, 
       :invite_expiration, :referral_expiration, :invited_at,
-      :event_id)
+      :event_id, :checked)
   end
 
   def guest_params_create
-    params.permit(
+    p = params.permit(
       :email, :first_name, :last_name, :affiliation, :type,
       :invite_expiration, :referral_expiration, :invited_at,
-      :event_id, :added_by)
+      :event_id).to_h
+    p[:added_by] = current_user.id
+    return p
   end
 end

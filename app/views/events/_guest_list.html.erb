@@ -3,7 +3,11 @@
     data-guest-seaturl-value="/api/v1/events/<%= @event_id %>/seats"
     data-update-url-value="/api/v1/events/<%= @event_id %>/guests"
     data-destroy-url-value="/api/v1/events/<%= @event_id %>/guests"
-    data-guest-offset-value=0 data-guest-limit-value=25>
+    data-guest-offset-value=0 data-guest-limit-value=25
+    data-action='update:created->guest#query update:created->guest#resetAddGuest destroy:deleted->guest#query'>
+  <template id='seat_levels'>
+    <select data-guest-target='seat'></select>
+  </template>
   <template id='allotments'>
     <div>
       <select class='seat_id guest-seat-alloc'></select>
@@ -12,54 +16,83 @@
     </div>
   </template>
   <template data-guest-target='template'>
-    <tr>
-      <td><input class='id' type='checkbox' name='id' data-destroy-target='destroy' data-update-target='update'></td>
-      <td class='name'><span class='first_name'></span> <span class='last_name'></span></td>
-      <td class='email'></td>
-      <td class='affiliation'></td>
-      <td class='added_by'></td>
-      <td class='category'></td>
-      <td class='allotments'></td>
-      <td>
-        <i class='bi bi-calendar-event invite_expiration' data-guest-target='tooltip'></i>
-        <i class='bi bi-envelope emailed_at' data-guest-target='tooltip'></i>
-        <i class='bi bi-bookmark-check-fill booked'></i>
-      </td>
-      <td><input class='checked' type='checkbox'></td>
-      <td>
+    <form class='row' data-guest-target='form' data-action='change->guest#updateForm'>
+      <div class='col-md-auto'><input class='form-check-input' type='checkbox' name='id' data-nxt-id data-destroy-target='destroy' data-update-target='update'></div>
+      <div class='col-md-1'><span data-nxt-first_name></span> <span data-nxt-last_name></span></div>
+      <div class='col-md-2'><p data-nxt-email></p></div>
+      <div class='col-md-1'><input class='form-control' type='text' name='affiliation' data-nxt-affiliation></p></div>
+      <div class='col-md-1'><p data-nxt-added_by></p></div>
+      <div class='col-md-1'><select class='form-select form-select-sm' name='seat_id' data-nxt-category data-guest-target='seat'></select></div>
+      <div class='col-md-1'><input class='form-control' type='number' name='allotted' min=0 data-nxt-allotted disabled></div>
+      <div class='col-md-1'>
+        <i class='bi bi-calendar-event' data-nxt-invite_expiration data-guest-target='tooltip'></i>
+        <i class='bi bi-envelope' data-nxt-emailed_at data-guest-target='tooltip'></i>
+        <i class='bi bi-bookmark-check-fill' data-nxt-booked></i>
+      </div>
+      <div class='col-md-auto'><input type='checkbox' name='checked' data-nxt-checked></div>
+      <div class='col-md-2'>
         <div class="dropdown">
           <button class='btn btn-secondary dropdown-toggle' type='button'
               data-bs-toggle='dropdown' aria-expanded='false'>
             Actions
           </button>
           <ul class='dropdown-menu'>
-            <li><button class='dropdown-item dropdown-invite-item' type='button'></button></li>
-            <li><button class='dropdown-item dropdown-email-item' type='button'>Send email</button></li>
+            <li><button class='dropdown-item dropdown-email-item' type='button' data-bs-toggle='modal' data-bs-target='#email-modal' data-nxt-email>Send Email</button></li>
             <li><hr class='dropdown-divider'></li>
-            <li><button class='text-danger dropdown-item dropdown-delete-item' type='button'>Delete</button></li>
+            <li><button class='text-danger dropdown-item dropdown-delete-item' type='button' data-nxt-id data-action='destroy#destroyByValue'>Delete</button></li>
           </ul>
         </div>
-      </td>
-    </tr>
+      </div>
+    </form>
   </template>
-  <table class="table">
-    <thead>
-      <tr>
-        <th rowspan="2"></th>
-        <th rowspan="2"><span data-bs-toggle='tooltip' data-bs-placement='top' title='123'>Name</span></th>
-        <th rowspan="2">Email</th>
-        <th rowspan="2">Affiliation</th>
-        <th rowspan="2">Added By</th>
-        <th colspan="2">Allocation</th>
-      </tr>
-      <tr>
-        <th>Seat Level</th>
-        <th>Allotment</th>
-        <th>Status</th>
-        <th>Check-in</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody data-guest-target='dom'></tbody>
-  </table>
+  <div class="container border-bottom border-dark" data-guest-target='dom'>
+    <div class='row align-items-end mb-4 border-bottom border-dark'>
+      <div class='col-md-auto'><input class='form-check-input invisible' type='checkbox' name='id' data-nxt-id data-destroy-target='destroy' data-update-target='update'></div>
+      <div class='col-md-1'><span data-bs-toggle='tooltip' data-bs-placement='top' title='123'>Name</span></div>
+      <div class='col-md-2'>Email</div>
+      <div class='col-md-1'>Affiliation</div>
+      <div class='col-md-1'>Added By</div>
+      <div class='col-md-2'>
+        <div class='row'>
+          <div class='col-md text-center'>Allocation</div>
+        </div>
+        <div class='row'>
+          <div class='col-md text-center'>Seat Tier</div>
+          <div class='col-md text-center'>Allotted</div>
+        </div>
+      </div>
+      <div class='col-md-1'>Status</div>
+      <div class='col-md-1'>Check-in</div>
+      <div class='col-md-2'></div>
+    </div>
+  </div>
+  <div class='container mt-2'>
+    <form id='form-add-guest' class='row' data-guest-target='add' data-action='update#sendFromForm'>
+      <div class='col'>
+        <div class='form-floating'>
+          <input id='guest-add-fn' class='form-control' type='text' name='first_name'>
+          <label for='guest-add-fn'>First Name</label>
+        </div>
+      </div>
+      <div class='col'>
+        <div class='form-floating'>
+          <input id='guest-add-ln' class='form-control' type='text' name='last_name'>
+          <label for='guest-add-ln'>Last Name</label>
+        </div>
+      </div>
+      <div class='col'>
+        <div class='form-floating'>
+          <input id='guest-add-email' class='form-control' type='email' name='email'>
+          <label for='guest-add-email'>Email</label>
+        </div>
+      </div>
+      <div class='col'>
+        <div class='form-floating'>
+          <input id='guest-add-aff' class='form-control' type='text' name='affiliation'>
+          <label for='guest-add-aff'>Affiliation</label>
+        </div>
+      </div>
+      <div class='col'><button class='btn-sm btn-success' form='form-add-guest'><i class='bi bi-plus'></i>Add</button></div>
+    </form>
+  </div>
 </div>

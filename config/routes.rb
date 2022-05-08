@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   
   resources :events do
     resource :refer
+    resource :book
     resources :guests
     resources :seating_types
   end

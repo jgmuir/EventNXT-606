@@ -9,17 +9,17 @@
     <p><b>Event title: {{event.title}} </b></p>
     <p><b>Event date: {{event.datetime}} </b></p>
     {{#tickets}}
-    <p><b>Seat Category: {{seat.category}}</b> {{committed}}</p>
+    <p><b>Seat Category: {{category}}</b> {{committed}}</p>
     {{/tickets}}
     <p>
       Please refer your friends using the link
-      <a href='/refer?token={{guest.id}}'>Event</a>. You may receive
+      <a href='{{refer_url}}'>{{refer_url}}</a>.
     </p>
-    <ul>
+    <!-- <ul>
       {{#referral_rewards}}
       <li>{{reward}} (min: {{min_count}}) referrals</li>
       {{/referral_rewards}}
-    </ul
+    </ul -->
     <p>Thanks for joining and have a great day!</b></p>
   </body>
 </html>

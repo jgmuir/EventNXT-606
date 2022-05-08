@@ -35,8 +35,9 @@ class UpdateDatabase < ActiveRecord::Migration[6.1]
       t.references :guest, null: false, foreign_key: true
       t.references :seat, null: false, foreign_key: true
       t.integer :committed
-      t.integer :allotted
+      t.integer :allotted, default: 0
     end
+    add_index :guest_seat_tickets, [:guest_id, :seat_id], unique: true
     
     create_table :guest_referral_rewards do |t|
       t.references :guest, null: false, foreign_key: true

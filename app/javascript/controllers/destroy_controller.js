@@ -11,7 +11,7 @@ export default class extends Controller {
         if (elem.checked)
           fetch(`${this.urlValue}/${elem.value}`, {
             method: 'DELETE'
-          }).then(response => this.indexController.query())
+          }).then(response => this.dispatch('deleted'))
       })
     }
   }
@@ -19,8 +19,6 @@ export default class extends Controller {
   destroyByValue(e) {
     let elem = e.currentTarget;
     let resource;
-    console.log(elem.value)
-    console.log(elem.getAttribute('data-nxt-id'))
     if (elem.value && elem.value !== '') {
       resource = elem.value;
     } else if (elem.getAttribute('data-nxt-id')) {
@@ -30,7 +28,6 @@ export default class extends Controller {
     }
     fetch(`${this.urlValue}/${resource}`, {
       method: 'DELETE'
-    }).then(response => this.dispatch('deleted', { detail: 'hello'}))
-    console.log('destroy');
+    }).then(response => this.dispatch('deleted'))
   }
 }

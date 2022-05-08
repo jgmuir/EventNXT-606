@@ -1,6 +1,7 @@
 class Api::V1::UsersController < Api::V1::ApiController
   def index
-    users = User.where(deactivated: false).limit(params[:limit]).offset(params[:offset])
+    render json: [], status: :forbidden and return unless (current_user && current_user.is_admin)
+    users = User.where(deactivated: false).order(is_admin: :desc).limit(params[:limit]).offset(params[:offset])
     render json: users
   end
 

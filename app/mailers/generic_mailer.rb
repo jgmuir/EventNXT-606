@@ -7,6 +7,10 @@ class GenericMailer < ApplicationMailer
     }
     opts[:attachments].each { |filename, file| attachments[filename] = file } unless opts[:attachments].nil?
 
+    logger.debug 'HERE'
+    logger.debug from
+    logger.debug email_address_with_name(recipient.email, recipient.full_name)
+
     mail(
       to: email_address_with_name(recipient.email, recipient.full_name),
       cc: from,

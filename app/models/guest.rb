@@ -2,9 +2,9 @@ class Guest < ApplicationRecord
   belongs_to :event
   belongs_to :user, foreign_key: :added_by
 
-  has_many :guest_seat_tickets
-  has_many :guest_referrals
-  has_many :guest_referral_rewards
+  has_many :guest_seat_tickets, dependent: :destroy
+  has_many :guest_referrals, dependent: :destroy
+  has_many :guest_referral_rewards, dependent: :destroy
   has_many :seats, through: :guest_seat_tickets, dependent: :destroy
   has_many :referral_rewards, through: :guest_referral_rewards, dependent: :destroy
 

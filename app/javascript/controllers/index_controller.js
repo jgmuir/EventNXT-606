@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class IndexController extends Controller {
   static targets = [ 'dom', 'template', 'limit', 'offset' ];
-  static values = { url: String, offset: Number, limit: Number };
+  static values = { url: String, offset: Number, limit: { type: Number, default: 10 }};
 
   connect() { this.query(); }
 
@@ -163,7 +163,8 @@ export default class IndexController extends Controller {
   }
 
   decrementOffset() {
-    if (this.offsetValue > 0)
+    console.log(this.offsetValue + ' ' + this.limitValue)
+    if (this.offsetValue - this.limitValue >= 0)
       this.offsetValue -= this.limitValue;
   }
 
@@ -172,11 +173,13 @@ export default class IndexController extends Controller {
       this.limitValue = this.offsetTarget.value
   }
 
-  limitValueChanged() {
-    this.query();
+  limitValueChanged(value, previousValue) {
+    if (value != previousValue)
+      this.query();
   }
 
-  offsetValueChanged() {
-    this.query();
+  offsetValueChanged(value, previousValue) {
+    if (value != previousValue)
+      this.query()
   }
 }

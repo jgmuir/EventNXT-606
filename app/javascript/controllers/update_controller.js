@@ -15,7 +15,7 @@ export default class extends Controller {
     payload.delete('access_token');
     payload.delete('authenticity_token');
 
-    let id = form.querySelector('.id');
+    let id = form.querySelector('input[data-nxt-id]');
     if (!id || id.value === '')
       this.create(payload);
     else
@@ -25,7 +25,7 @@ export default class extends Controller {
   updateBatchFromCheckbox({ params: { payload } }) {
     if (this.updateTargets.length > 0) {
       this.updateTargets.forEach( elem => {
-        let checkbox = elem.querySelector('input[type="checkbox"].id');
+        let checkbox = elem.querySelector('input[type="checkbox"][data-nxt-id]');
         if (!checkbox.checked) 
           return;
         fetch(`${this.urlValue}/${checkbox.value}`, {
@@ -35,10 +35,10 @@ export default class extends Controller {
           },
           method: 'PATCH',
           body: JSON.stringify(payload)
-        }).then(response => response.json())
-          .then(data => {
-          elem.replaceWith(this.fillTemplate(data, elem));
-        });
+        }).then(response => {this.dispatch('updated')})
+        //   .then(data => {
+        //   elem.replaceWith(this.fillTemplate(data, elem));
+        // })
         checkbox.checked = false;
       })
     }
@@ -65,44 +65,5 @@ export default class extends Controller {
     }).then(response => response.json())
       .then(data => this.dispatch('updated', {detail: data}))
 
-  }
-
-  fillTemplate(obj, template) {
-    for (const [key, value] of Object.entries(obj)) {
-      console.log(key, value);
-      let result;
-      if (Array.isArray(value)) {
-        const nestedTemplate = this.element.querySelector(`#${key}`).content.cloneNode(true);
-        if (nestedTemplate === null)
-          continue;
-        console.log(nestedTemplate);
-        result += this.fillTemplateArray(value, nestedTemplate);
-      } else if (typeof value === 'object' && value != null) {
-        const nestedTemplate = this.element.querySelector(`#${key}`).content.cloneNode(true);
-        if (nestedTemplate === null)
-          continue;
-        result = this.fillTemplate(value, nestedTemplate);
-      } else {
-        result = value;
-      }
-      const elems = template.querySelectorAll(`.${key}`)
-      if (elems !== null)
-        elems.forEach( elem => {
-          console.log(elem);
-          if (elem.tagName === "INPUT"
-                || elem.tagName === 'SELECT'
-                || elem.tagName === 'BUTTON') {
-            if (elem.type == 'checkbox' && typeof result == 'boolean') {
-              elem.value = key
-              elem.checked = value
-            } else {
-              elem.value = result;
-            }
-          } else {
-            elem.innerHTML = result;
-          }
-        });
-    }
-    return template;
   }
 }

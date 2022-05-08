@@ -31,7 +31,7 @@ export default class extends Controller {
   }
 
   loadTemplate() {
-    if (!this.selectTarget.value || this.selectTarget.value === 'generic') {
+    if (!this.selectTarget.value || this.selectTarget.value === '') {
       if (this.hasEmailTarget)
         this.emailTarget.reset();
       if (this.hasTemplateTarget)
@@ -77,7 +77,7 @@ export default class extends Controller {
   sendTemplate(e) {
     let method;
     let resource;
-    if (!this.selectTarget.value || this.selectTarget.value === 'generic') {
+    if (!this.selectTarget.value || this.selectTarget.value === '') {
       method = 'POST'
       resource = ''
     } else {

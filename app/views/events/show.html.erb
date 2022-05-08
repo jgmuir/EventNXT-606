@@ -1,3 +1,7 @@
+<% content_for :nav do %>
+  <%= render 'layouts/nav' %>
+<% end %>
+
 <style>
     body {
     
@@ -130,18 +134,70 @@ function refresh() {
 
 <body>
 <section>
-<h2><%= @event.title %></h2>
+<h1><%= @event.title %></h1>
 
+<img class='w-25' src='<%= url_for(@event.image) if @event.image.attached? %>' alt='Event image'>
 <!--<h2>The Control Room</h2>-->
 <p>Event Date: <%=@event.datetime %></p> <!-- format this to look nicer -->
 <p>Address: <%=@event.address %></p> <!-- <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p> Example of what addr should look like--> 
 <p>Description: <%=@event.description %></p>
-<br><br>
-<%= button_to "Edit Event", edit_event_url(@event), :method => :get%>
-<%= button_to "Delete Event", @event, :method => :delete, data: {confirm: "Are you sure you want to delete this event?"} %>
-<br><br>
+<%# <%= button_to "Edit Event", edit_event_url(@event), :method => :get %>
 
-<!-- Where both Seat Category and Guest Table will go -->
+<%= render 'form' %>
+<div class='d-flex mt-2'>
+  <button class='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#event-modal">Edit Event</button>
+  <%= button_to "Delete Event", @event, :method => :delete, data: {confirm: "Are you sure you want to delete this event?"} %>
+</div>
+<script>
+var eventModal = document.getElementById('event-modal')
+eventModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget
+  eventModal.querySelector('.modal-title').textContent = "Update Event"
+  eventModal.querySelector('button[type="submit"]').textContent = "Update"
+  eventModal.querySelector('#event-name').value = "<%= @event.title %>"
+  eventModal.querySelector('#event-address').value = "<%= @event.address %>"
+  eventModal.querySelector('#event-description').value = "<%= @event.description %>"
+  eventModal.querySelector('#event-datetime').value = (new Date("<%= @event.datetime.to_fs(:iso8601) %>")).toISOString().slice(0,16)
+})
+</script>
+
+<h2>Manage Seating Levels</h2>
+
+<!-- button to add seating levels -->
+<button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
+<div id="seating-table">
+  <table class="center">
+  <tr>
+    <th width=199.8>Category</th>
+    <th width=199.8>Total Count</th>
+  </tr>
+  <tbody>
+    <% @seats.each do |seat| %>
+      <tr>
+        <th width="199.8"><%= seat.category %></th>
+        <th width="199.8"><%= seat.total_count %></th>
+      </tr>
+    <% end %>
+  </tbody>
+  </table>
+  <div>
+      <form method="post" action="http://localhost:3000/events/<%= @event.id %>/seating_types">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <table>
+        <tr>
+          <th>
+            <input type="text" name="category">
+          </th>
+          <th>
+            <input type="number" name="total_count">
+          </th>
+        </tr>
+      </table>
+      <button type="submit" value="submit" class="button">Create Seating Type</button>
+      </form>
+  </div>
+</div><br><br>
+
 <h4> Seating Summary Information </h4>
 <table class="center">
   <tr>
@@ -181,82 +237,25 @@ function refresh() {
 
 <%= button_to "summary", api_v1_event_summary_path(@event), method: :get %><br>
 
-<!-- button to add seating levels -->
-<button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
-<div id="seating-table">
-  <table class="center">
-  <tr>
-    <th width=199.8>Category</th>
-    <th width=199.8>Total Count</th>
-  </tr>
-  <tbody>
-    <% @seats.each do |seat| %>
-      <tr>
-        <th width="199.8"><%= seat.category %></th>
-        <th width="199.8"><%= seat.total_count %></th>
-      </tr>
-    <% end %>
-  </tbody>
-  </table>
-  <div>
-      <form method="post" action="http://localhost:3000/events/<%= @event.id %>/seating_types">
-      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <table>
-        <tr>
-          <th>
-            <input type="text" name="category">
-          </th>
-          <th>
-            <input type="number" name="total_count">
-          </th>
-        </tr>
-      </table>
-      <button type="submit" value="submit" class="button">Create Seating Type</button>
-      </form>
-  </div>
-</div><br><br>
 <!-- button to edit/add guests -->
 
-<% if @seats.length > 0 %>
-  <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
-  <div id="guest-list-table">
-    <table class="center">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Added By</th>
-          <th>Affiliation</th>
-          <th>Seat Category</th>
-          <th>Action</th>
-          <th>Ticket Booking Status</th>
-      </thead>
-      <tbody>
-        <% @guests.each do |guest| %>
-          <tr>
-            <th><%= guest.first_name %></th>
-            <th><%= guest.last_name %></th>
-            <th><%= guest.email %></th>
-            <th><%= User.find(guest.added_by).email %></th> <!-- corresponds to email, should go to name -->
-            <th><%= guest.affiliation %></th>
-            <th><%= guest.category %></th>
-            <th><button data-bs-toggle="modal" data-bs-target="#email-modal" data-bs-recipient=<%= guest.email %>>Send</button><br><%= button_to "Delete", event_guest_path(Event.find(guest.event_id), guest.id), :method => :delete, data: {confirm: "Are you sure you want to delete this guest?"}%></th> <!-- link to email things -->
-            <th><%= guest.booked ? 'Yes':'No' %></th> <uu!-- convert this into Yes/No -->
-          </tr>
-        <% end %>
-        
-      </tbody><br>
-      
-    </table>
-  </div><br><br>
-<% end %>
+<h2>Manage Guests</h2>
 
-<h1>Manage Guests</h1><br>
+<div>
+  <div class='d-flex justify-content-between'>
+    <div class='d-flex'>
+      <%= render 'email_template' %>
+      <span class='ms-2 me-2'></span>
+      <%= render 'email_modal' %>
+    </div>
+    <div>
+      <a href='/api/v1/events/<%= @event_id %>/guests?download'><button class='btn btn-primary'>Download</button></a>
+    </div>
+  </div>
+  <%= render 'guest_list' %>
+</div>
 
-<%= render 'email_template' %>
-<%= render 'email_modal' %>
-
+<h2>Manage Referrals</h2>
 <button id="referral-table-toggle" onclick="referral_table_toggle()">Referral Table</button>
 <%= render 'referral_table' %>
 
@@ -264,13 +263,13 @@ function refresh() {
 var emailModal = document.getElementById('email-modal')
 emailModal.addEventListener('show.bs.modal', function (event) {
   var button = event.relatedTarget
-  var recipient = button.getAttribute('data-bs-recipient')
+  var recipient = button.getAttribute('data-nxt-email')
   var modalInput = emailModal.querySelector('#email-to')
   modalInput.value = recipient
 })
 </script>
 
-<div id="form-div">
+<!--<div id="form-div">
 <h3>Import Box Office Data</h3>
 <%= form_tag import_new_spreadsheet_path, multipart: true  do %> 
   <div style="text-align: center;">
@@ -280,8 +279,7 @@ emailModal.addEventListener('show.bs.modal', function (event) {
     <%= submit_tag("Import Latest Box Office Data", :class => "button") %>
   </div>
 <% end %>
-</div>
-<br><br><br>
+</div> -->
 
 <h1 class="display-6" style="text-align: center; color: gray;"> Referral Rewards </h1><br><br>
 <div id="referral">

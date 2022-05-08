@@ -1,6 +1,7 @@
 <div id='users' data-controller='index update destroy'
     data-index-url-value='/api/v1/users' data-destroy-url-value='/api/v1/users' data-update-url-value='/api/v1/users'
-    data-index-offset-value=0 data-index-limit-value=10>
+    data-index-offset-value=0 data-index-limit-value=10
+    data-action='update:updated->index#query destroy:deleted->index#query'>
   <template data-index-target='template'>
     <tr data-update-target='update'>
       <td><input data-nxt-id type='checkbox' name='id' data-destroy-target='destroy'></td>
@@ -34,15 +35,15 @@
   </table>
   <div class='d-flex justify-content-between'>
     <div>
-      <button data-action='update#updateBatchFromCheckbox' data-update-payload-param='{"is_admin": true}'>Elevate</button>
-      <button data-action='update#updateBatchFromCheckbox' data-update-payload-param='{"is_admin": false}'>Demote</button>
-      <button data-action='click->destroy#destroy'>Deactivate</button>
+      <button class='btn-sm btn-primary' data-action='update#updateBatchFromCheckbox' data-update-payload-param='{"is_admin": true}'>Elevate</button>
+      <button class='btn-sm btn-primary' data-action='update#updateBatchFromCheckbox' data-update-payload-param='{"is_admin": false}'>Demote</button>
+      <button class='btn-sm btn-primary' data-action='click->destroy#destroy'>Deactivate</button>
     </div>
     <div>
-      <button><i class='bi bi-chevron-double-left'></i></button>
-      <button data-action='index#decrementOffset'><i class='bi bi-chevron-left'></i></button>
-      <button data-action='index#incrementOffset'><i class='bi bi-chevron-right'></i></button>
-      <button><i class='bi bi-chevron-double-right'></i></button>
+      <button class='btn-sm btn-primary'><i class='bi bi-chevron-double-left'></i></button>
+      <button class='btn-sm btn-primary' data-action='index#decrementOffset'><i class='bi bi-chevron-left'></i></button>
+      <button class='btn-sm btn-primary' data-action='index#incrementOffset'><i class='bi bi-chevron-right'></i></button>
+      <button class='btn-sm btn-primary'><i class='bi bi-chevron-double-right'></i></button>
     </div>
   </div>
 </div>

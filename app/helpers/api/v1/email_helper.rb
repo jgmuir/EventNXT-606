@@ -28,19 +28,30 @@ module Api::V1::EmailHelper
       subject = opts[:subject].nil? ? template.subject : opts[:subject]
       subject = Mustache.render(subject, event: guest.event, guest: guest)
 
-      body = Mustache.render(template.body,
-        sender: senders[0],
-        event: guest.event,
-        guest: guest,
-        tickets: guest.guest_seat_tickets,
-        referral_rewards: guest.event.referral_rewards,
-        links: links)
-      logger.debug senders
-      logger.debug senders[0]
-      logger.debug senders[0].email
-      logger.debug guest.event
-      logger.debug guest.event.referral_rewards.collect
-      logger.debug body
+      tickets = guest.guest_seat_tickets.map { |ticket|
+        {
+         category: ticket.seat.category,
+         committed: ticket.committed,
+         allotted: ticket.allotted
+        }
+      }
+
+      rsvp_url = "#{request.base_url}/events/#{guest.event.id}/book?token=#{guest.id}"
+      refer_url = "#{request.base_url}/events/#{guest.event.id}/refer?token=#{guest.id}"
+
+      body = ''
+      ActiveStorage::Current.set(host: request.base_url) do
+        body = Mustache.render(template.body,
+          sender: senders[0],
+          event: guest.event,
+          guest: guest,
+          tickets: tickets,
+          referral_rewards: guest.event.referral_rewards,
+          rsvp_url: rsvp_url,
+          refer_url: refer_url,
+          links: links)
+      end
+
       if template.is_html
         body = Rails::Html::SafeListSanitizer.new.sanitize(body)
         plain = Rails::Html::SafeListSanitizer.new.sanitize(
