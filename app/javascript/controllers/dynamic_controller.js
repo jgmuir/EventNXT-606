@@ -12,7 +12,6 @@ export default class extends Controller {
   }
 
   disable(e) {
-    console.log(e)
     e.currentTarget.setAttribute('disabled', true)
   }
 

@@ -5,7 +5,6 @@ export default class extends Controller {
   static values = { url: String };
 
   sendFromForm(e) {
-    console.log('submitted')
     e.preventDefault();
     let form = e.currentTarget;
     if (!form.checkValidity())

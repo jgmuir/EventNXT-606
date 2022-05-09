@@ -163,7 +163,6 @@ export default class IndexController extends Controller {
   }
 
   decrementOffset() {
-    console.log(this.offsetValue + ' ' + this.limitValue)
     if (this.offsetValue - this.limitValue >= 0)
       this.offsetValue -= this.limitValue;
   }
