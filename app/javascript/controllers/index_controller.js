@@ -105,8 +105,15 @@ export default class IndexController extends Controller {
       if (elems === null)
         continue;
       elems.forEach( elem => {
-        if (result !== null)
+        if (result !== null){
+          if (typeof(result) == "string") { // edit date into normal format using JS
+            if(result.includes(":")){
+              var split = result.split("T")
+              result = split[0]
+            }
+          }
           elem.setAttribute(`data-nxt-${key}`, result)
+        }
 
         if (elem.getAttribute('data-nxt-nomod') !== null)
           return;

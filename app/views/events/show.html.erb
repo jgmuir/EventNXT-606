@@ -57,8 +57,12 @@
     border: 1px solid black;
   }
   th, td {
-    padding: 10px;
-    width: 100px;
+    padding: 5px;
+    #width: 209.8px;
+  }
+
+  th.value input{
+    width: 100%
   }
 
   #seating-table{
@@ -138,38 +142,84 @@ function refresh() {
 <br><br>
 
 <!-- Where both Seat Category and Guest Table will go -->
+<h4> Seating Summary Information </h4>
+<table class="center">
+  <tr>
+    <th width=199.8>Category</th>
+    <th width=199.8>Total Committed</th>
+    <th width=199.8>Total Allotted</th>
+    <th width=199.8>Remaining</th>
+    <th width=199.8>Total Booked</th>
+    <th width=199.8>Total Guests</th>
+    <th width=199.8>Balance</th>
+  </tr>
+  <tbody>
+    <% @res.each do |result| %>
+      <tr>
+        <th width=199.8><%= result.category %></th>
+        <th width=199.8><%= result.total_committed %></th>
+        <th width=199.8><%= result.total_allotted%></th>
+        <th width=199.8><%= result.remaining %></th>
+        <th width=199.8><%= result.total_booked %></th>
+        <th width=199.8><%= result.total_guests %></th>
+        <th width=199.8><%= result.balance %></th>
+      </tr>
+    <% end %>
+    <!-- loop through data/info here %>
+    <tr>
+      <th width=199.8>Category</th>
+      <th width=199.8>Total Committed</th>
+      <th width=199.8>Total Allotted</th>
+      <th width=199.8>Remaining</th>
+      <th width=199.8>Total Booked</th>
+      <th width=199.8>Total Guests</th>
+      <th width=199.8>Balance</th>
+    </tr>
+     put end here -->
+  </tbody>
+</table><br><br>
+
+<%= button_to "summary", api_v1_event_summary_path(@event), method: :get %><br>
 
 <!-- button to add seating levels -->
 <button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
 <div id="seating-table">
-  <%= link_to 'Add', new_event_seating_type_url(@event.id) %>
-  <a href="">Edit</a> <!-- clicking here should allow the levels to be edited -->
   <table class="center">
   <tr>
-    <th>Category</th>
-    <th>Total Count</th>
+    <th width=199.8>Category</th>
+    <th width=199.8>Total Count</th>
   </tr>
   <tbody>
     <% @seats.each do |seat| %>
       <tr>
-        <th><%= seat.category %></th>
-        <th><%= seat.total_count %></th>
+        <th width="199.8"><%= seat.category %></th>
+        <th width="199.8"><%= seat.total_count %></th>
       </tr>
     <% end %>
   </tbody>
   </table>
+  <div>
+      <form method="post" action="http://localhost:3000/events/<%= @event.id %>/seating_types">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <table>
+        <tr>
+          <th>
+            <input type="text" name="category">
+          </th>
+          <th>
+            <input type="number" name="total_count">
+          </th>
+        </tr>
+      </table>
+      <button type="submit" value="submit" class="button">Create Seating Type</button>
+      </form>
+  </div>
 </div><br><br>
 <!-- button to edit/add guests -->
-
-<h1>Manage Guests</h1><br>
-
-<%= render 'email_template' %>
-<%= render 'email_modal' %>
 
 <% if @seats.length > 0 %>
   <button id="guest-list-table-toggle" onclick="guest_table_toggle()">Guest-List Table</button>
   <div id="guest-list-table">
-    <a href="/events/<%= @event.id %>/guests/new">Add Guest</a> <!-- clicking here should add guest to table, turn into button -->
     <table class="center">
       <thead>
         <tr>
@@ -201,6 +251,11 @@ function refresh() {
     </table>
   </div><br><br>
 <% end %>
+
+<h1>Manage Guests</h1><br>
+
+<%= render 'email_template' %>
+<%= render 'email_modal' %>
 
 <button id="referral-table-toggle" onclick="referral_table_toggle()">Referral Table</button>
 <%= render 'referral_table' %>

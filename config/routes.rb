@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       resources :users, except: [:create]
       resources :email, only: [:create]
       resources :events do
+        get '/summary' => 'events#summary'
         resource :guest_referrals, path: :refer, only: [:show, :create]
         resources :guests do
           member do

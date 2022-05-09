@@ -117,3 +117,33 @@ form{
 </div>
 </section>
 </body>
+
+<!-- this is the basic code to add guests directly though other way looks fine, this is option like Seating Types table -->
+<div>
+      <form method="post" action="http://localhost:3000/events/<%= @event.id %>/guests">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <input type="hidden" id="event_id" name="event_id" value=<%= @event.id %>>
+      <input type="hidden" id="added_by" name="added_by" value=<%= @event.user_id %>>
+      <table>
+        <tr>
+          <th><input type='text' id='first_name' name='first_name'></th>
+          <th><input type='text' id='last_name' name='last_name'></th>
+          <th><input type='text' id='email' name='email'></th>
+          <th><!-- blank spot --><th>
+          <th><input type='text' id='affiliation' name='affiliation'></th>
+          <th>
+            <input list="category" name="category">
+            <datalist id="category">
+              <% @seats.each do |seat|%>
+                <option value=<%= seat.category %>></option>
+              <% end %>
+            </datalist><br><br>
+          </th>
+          <th><!-- blank spot --></th>
+          <th><!-- blank spot --></th>
+        </tr>
+      </table>
+      <button type="submit" value="submit" class="button">Add Guest</button>
+      </form>
+    </div>
+  </div><br><br>

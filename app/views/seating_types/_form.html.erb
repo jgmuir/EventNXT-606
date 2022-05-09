@@ -1,3 +1,4 @@
+<!-- unneeded, moved to the events/show.html.erb -->
 <form method="post" action="http://localhost:3000/events/<%= params[:event_id] %>/seating_types">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <div class="field form-group">
@@ -8,5 +9,5 @@
     <label>Total seat count</label>
     <input type="number" name="total_count">
   </div>
-  <button type="submit" value="submit" class="button">Create Seat</button>
+  <button type="submit" value="submit" class="button">Create Seating Type</button>
 </form>

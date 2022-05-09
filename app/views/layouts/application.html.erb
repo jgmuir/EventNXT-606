@@ -19,8 +19,11 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 
-      
-      <%if user_signed_in? %>
+    <li class="nav-item">
+    <%= link_to "Dashboard" , events_path, class: "nav-link"%>
+    </li>
+      <!--  how to get API controller to talk here? may not be possible -->
+      <%if current_user %>
         <li class="nav-item">
           <%= link_to "Dashboard" , root_path, class: "nav-link"%>
           
@@ -33,16 +36,6 @@
         </li>
         <!-- work to get this to only show up on the main page for now is always on top bar -->
         <%= button_to "Create Event", events_create_event_path, :method => "get", class: "btn btn-success btn-rounded"%>
-
-      <%else %>  
-        
-        
-        <li class="nav-item">
-          <%= link_to "Sign Up" , new_user_registration_path, class: "nav-link"%>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Sign In" , new_user_session_path, class: "nav-link"%>
-        </li>
       <%end %>
 
 
