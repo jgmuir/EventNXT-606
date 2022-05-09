@@ -6,8 +6,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id='form-event' data-event-target='form'
-            data-action='update#sendFromForm' data-update-fields-param='["title", "address", "description", "datetime", "image", "box_office"]'>
+        <form id='form-event' data-event-target='form' data-action='update#sendFromForm'>
+          <input type='hidden' data-nxt-id>
           <div class='form-floating mb-2'>
             <input class='form-control' id='event-name' type='text' name='title'>
             <label for='event-name'>Name</label>

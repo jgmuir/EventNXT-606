@@ -1,4 +1,4 @@
-<div data-controller='email' data-email-eventid-value=<%= @event_id %>>
+<div data-controller='email dynamic' data-email-eventid-value=<%= @event_id %> data-action='email:emailed->dynamic#reload'>
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#email-modal" data-action='email#queryTemplates'>
     Email
   </button>

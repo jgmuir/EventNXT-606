@@ -70,7 +70,7 @@ export default class extends Controller {
       },
       method: "POST",
       body: new FormData(this.emailTarget)
-    }).then(response => console.log(response))
+    }).then(response => this.dispatch('emailed'))
     this.emailTarget.reset();
   }
 

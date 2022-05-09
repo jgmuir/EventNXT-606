@@ -68,10 +68,6 @@
   th.value input{
     width: 100%
   }
-
-  #seating-table{
-    display: none
-  }
 </style>
 
 <script>
@@ -132,30 +128,38 @@ function refresh() {
 }
 </script>
 
-<body>
-<section>
 <h1><%= @event.title %></h1>
+<div id='event-summary' class='mb-4'>
+  <div class='d-flex justify-content-start'>
+    <% if @event.image.attached? %>
+    <img class='w-25 me-2' src='<%= url_for(@event.image) %>' alt='Event image'>
+    <% end %>
 
-<% if @event.image.attached? %>
-<img class='w-25' src='<%= url_for(@event.image) %>' alt='Event image'>
-<% end %>
-<!--<h2>The Control Room</h2>-->
-<p>Event Date: <%=@event.datetime %></p> <!-- format this to look nicer -->
-<p>Address: <%=@event.address %></p> <!-- <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p> Example of what addr should look like--> 
-<p>Description: <%=@event.description %></p>
-<%# <%= button_to "Edit Event", edit_event_url(@event), :method => :get %>
+    <div>
+      <p>Event Date: <%=@event.datetime %></p> <!-- format this to look nicer -->
+      <p>Address: <%=@event.address %></p> <!-- <p><b>Event Address: 1255 NW 9th Ave, Portland, OR 97209</b></p> Example of what addr should look like--> 
+      <p>Description: <%=@event.description %></p>
+    </div>
 
-<%= render 'form' %>
-<div class='d-flex mt-2'>
-  <button class='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#event-modal">Edit Event</button>
-  <%= button_to "Delete Event", @event, :method => :delete, data: {confirm: "Are you sure you want to delete this event?"} %>
+    <div data-controller='update dynamic' data-update-url-value='/api/v1/events' data-action='update:updated->dynamic#reload'>
+      <%= render 'form' %>
+    </div>
+  </div>
+  <div class='d-flex mt-2'>
+    <button class='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#event-modal">Edit Event</button>
+    <%= button_to "Delete Event", @event, :method => :delete, data: {confirm: "Are you sure you want to delete this event?"}, class: 'btn btn-danger' %>
+  </div>
 </div>
+
 <script>
 var eventModal = document.getElementById('event-modal')
+var updateButton = eventModal.querySelector('button[type="submit"]')
 eventModal.addEventListener('show.bs.modal', function (event) {
   var button = event.relatedTarget
   eventModal.querySelector('.modal-title').textContent = "Update Event"
   eventModal.querySelector('button[type="submit"]').textContent = "Update"
+  eventModal.querySelector('input[data-nxt-id]').setAttribute('data-nxt-id', "<%= @event.id %>")
+  eventModal.querySelector('input[data-nxt-id]').value = "<%= @event.id %>"
   eventModal.querySelector('#event-name').value = "<%= @event.title %>"
   eventModal.querySelector('#event-address').value = "<%= @event.address %>"
   eventModal.querySelector('#event-description').value = "<%= @event.description %>"
@@ -164,15 +168,12 @@ eventModal.addEventListener('show.bs.modal', function (event) {
 </script>
 
 <h2>Manage Seating Levels</h2>
-
-<!-- button to add seating levels -->
-<button id="seating-table-toggle" onclick="seating_table_toggle()">Seating Levels</button>
-<div id="seating-table">
+<div id="seating-table" class='mb-4'>
   <table class="center">
-  <tr>
+  <thead>
     <th width=199.8>Category</th>
     <th width=199.8>Total Count</th>
-  </tr>
+  </thead>
   <tbody>
     <% @seats.each do |seat| %>
       <tr>
@@ -183,7 +184,7 @@ eventModal.addEventListener('show.bs.modal', function (event) {
   </tbody>
   </table>
   <div>
-      <form method="post" action="http://localhost:3000/events/<%= @event.id %>/seating_types">
+    <form id='form-seat' class='mb-2' method="post" action="http://localhost:3000/events/<%= @event.id %>/seating_types">
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <table>
         <tr>
@@ -195,35 +196,14 @@ eventModal.addEventListener('show.bs.modal', function (event) {
           </th>
         </tr>
       </table>
-      <button type="submit" value="submit" class="button">Create Seating Type</button>
-      </form>
+    </form>
+    <button type="submit" value="submit" form='form-seat' class="btn btn-primary">Create Seating Type</button>
   </div>
-</div><br><br>
+</div>
 
 <h4> Seating Summary Information </h4>
-<table class="center">
-  <tr>
-    <th width=199.8>Category</th>
-    <th width=199.8>Total Committed</th>
-    <th width=199.8>Total Allotted</th>
-    <th width=199.8>Remaining</th>
-    <th width=199.8>Total Booked</th>
-    <th width=199.8>Total Guests</th>
-    <th width=199.8>Balance</th>
-  </tr>
-  <tbody>
-    <% @res.each do |result| %>
-      <tr>
-        <th width=199.8><%= result.category %></th>
-        <th width=199.8><%= result.total_committed %></th>
-        <th width=199.8><%= result.total_allotted%></th>
-        <th width=199.8><%= result.remaining %></th>
-        <th width=199.8><%= result.total_booked %></th>
-        <th width=199.8><%= result.total_guests %></th>
-        <th width=199.8><%= result.balance %></th>
-      </tr>
-    <% end %>
-    <!-- loop through data/info here %>
+<div id='seating-summary' class='mb-4'>
+  <table class="center">
     <tr>
       <th width=199.8>Category</th>
       <th width=199.8>Total Committed</th>
@@ -233,17 +213,26 @@ eventModal.addEventListener('show.bs.modal', function (event) {
       <th width=199.8>Total Guests</th>
       <th width=199.8>Balance</th>
     </tr>
-     put end here -->
-  </tbody>
-</table><br><br>
-
-<%= button_to "summary", api_v1_event_summary_path(@event), method: :get %><br>
+    <tbody>
+      <% @res.each do |result| %>
+        <tr>
+          <th width=199.8><%= result.category %></th>
+          <th width=199.8><%= result.total_committed %></th>
+          <th width=199.8><%= result.total_allotted%></th>
+          <th width=199.8><%= result.remaining %></th>
+          <th width=199.8><%= result.total_booked %></th>
+          <th width=199.8><%= result.total_guests %></th>
+          <th width=199.8><%= result.balance %></th>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <!-- button to edit/add guests -->
 
 <h2>Manage Guests</h2>
-
-<div>
+<div class='mb-4'>
   <div class='d-flex justify-content-between'>
     <div class='d-flex'>
       <%= render 'email_template' %>
@@ -251,14 +240,13 @@ eventModal.addEventListener('show.bs.modal', function (event) {
       <%= render 'email_modal' %>
     </div>
     <div>
-      <a href='/api/v1/events/<%= @event_id %>/guests?download'><button class='btn btn-primary'>Download</button></a>
+      <a href='/api/v1/events/<%= @event_id %>/guests?download'><button class='btn btn-primary'>Export Guest List</button></a>
     </div>
   </div>
   <%= render 'guest_list' %>
 </div>
 
 <h2>Manage Referrals</h2>
-<button id="referral-table-toggle" onclick="referral_table_toggle()">Referral Table</button>
 <%= render 'referral_table' %>
 
 <script>
@@ -283,7 +271,7 @@ emailModal.addEventListener('show.bs.modal', function (event) {
 <% end %>
 </div> -->
 
-<h1 class="display-6" style="text-align: center; color: gray;"> Referral Rewards </h1><br><br>
+<h4 class="display-10" style="text-align: center; color: gray;"> Referral Rewards </h1><br><br>
 <div id="referral">
   <div style="text-align: center;" id="center-referral-button">
     <button type="button" id="referral-prepper" class="btn btn-success btn-rounded" onclick="toggle_referral()">Open Referral Reward Template</button>
@@ -318,10 +306,3 @@ emailModal.addEventListener('show.bs.modal', function (event) {
 </div>
 
 <%= link_to "Back", '/events', class:"btn btn-primary" %><br><br> <!-- question if/what this should change to -->
-
-
-
-
-
-</section>
-</body>
