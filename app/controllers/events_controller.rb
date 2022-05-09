@@ -9,6 +9,17 @@ class EventsController < ApplicationController
     @event_id = params[:id]
     @seats = Seat.where(event_id: params[:id])
     @guests = Guest.where(event_id: params[:id])
+    @res = Seat.left_joins(:guest_seat_tickets, :guests)
+              .select('seats.category,price,total_count,'\
+                      'sum(coalesce(committed,0)) as total_committed,'\
+                      'sum(coalesce(allotted,0)) as total_allotted,'\
+                      'total_count - sum(coalesce(committed,0)) as remaining,'\
+                      'count(*) filter(where "booked") as total_booked,'\
+                      'count(*) filter (where not "booked") as total_not_booked,'\
+                      'count(distinct(guest_id)) as total_guests,'\
+                      'sum(coalesce(committed,0)) * price as balance')
+              .group('seats.id')
+              .where(seats: {event_id: @event.id})
   end
 
   def new
@@ -59,6 +70,21 @@ class EventsController < ApplicationController
     
     @event = Event.import(params[:file])
     redirect_to @event
+  end
+
+  def summary
+    res = GuestSeatTicket.joins(:seat, :guest)
+              .select('category,price,total_count,'\
+                      'sum(committed) as total_committed,'\
+                      'sum(allotted) as total_allotted,'\
+                      'total_count - sum(committed) as remaining,'\
+                      'count(*) filter(where "booked") as total_booked,'\
+                      'count(*) filter (where not "booked") as total_not_booked,'\
+                      'count(distinct(guest_id)) as total_guests,'\
+                      'sum(committed) * price as balance')
+              .group('seats.id')
+              .where(seats: {event_id: params[:event_id]})
+    render json: res.to_json, except: [:id]
   end
 
   private

@@ -39,7 +39,7 @@
     </p>
     <div class="ticket">
         <h2>Event Title: <%= @event.title %></h2>
-        <div id="img"><img src='<%= url_for(@event.image) %>' height='<%= $event_pic_size_left.to_s %>' width='<%= $event_pic_size_right.to_s %>'></div>
+        
         <p><b>Guest Name: <%= @guest.first_name %></b></p>
         <p><b>Event date: <%= @event.datetime %></b></p>
         <p><b>Number of tickets: <%= $event_tickets.to_s %></b></p>
