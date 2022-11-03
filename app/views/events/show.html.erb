@@ -168,39 +168,38 @@ eventModal.addEventListener('show.bs.modal', function (event) {
 </script>
 
 <h2>Manage Seating Levels</h2>
-<div id="seating-table" class='mb-4'>
-  <table class="center">
-  <thead>
-    <th width=199.8>Category</th>
-    <th width=199.8>Total Count</th>
-  </thead>
-  <tbody>
-    <% @seats.each do |seat| %>
-      <tr>
-        <th width="199.8"><%= seat.category %></th>
-        <th width="199.8"><%= seat.total_count %></th>
-      </tr>
-    <% end %>
-  </tbody>
-  </table>
-  <div>
-    <form id='form-seat' class='mb-2' method="post" action="/events/<%= @event.id %>/seating_types">
-      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <table>
-        <tr>
-          <th>
-            <input type="text" name="category">
-          </th>
-          <th>
-            <input type="number" name="total_count">
-          </th>
-        </tr>
-      </table>
-    </form>
-    <button type="submit" value="submit" form='form-seat' class="btn btn-primary">Create Seating Type</button>
+<div class="divTable paleBlueRows">
+  <div class="divTableHeading">
+    <div class="divTableRow">
+      <div class="divTableHead">Category</div>
+      <div class="divTableHead">Total Count</div>
+      <div class="divTableHead">Actions</div>
+    </div>
   </div>
-</div>
-
+  
+  <div class="divTableBody" >
+    <% @seats.each do |seat| %>
+      <%= content_tag :div, class: 'divTableRow', id: dom_id(seat) do %>
+        <%= render seat %>
+      <% end %>
+    <% end %>
+  </div>
+  <form id='form-seat' class="divTableBody" method="post" action="/events/<%= @event.id %>/seating_types">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class='divTableRow'>
+      <div class="divTableCell Add">
+        <input type="text" name="category">
+      </div>
+      <div class="divTableCell Add">
+        <input type="number" name="total_count">
+      </div>
+      <div class="divTableCell Add">
+        <button type="submit" value="submit" form='form-seat' class="btn btn-primary">+</button>
+      </div>
+    </div>
+  </form>
+</div> 
+<br>
 <h4> Seating Summary Information </h4>
 <div id='seating-summary' class='mb-4'>
   <table class="center">
@@ -238,6 +237,8 @@ eventModal.addEventListener('show.bs.modal', function (event) {
       <%= render 'email_template' %>
       <span class='ms-2 me-2'></span>
       <%= render 'email_modal' %>
+      <span class='ms-2 me-2'></span>
+      <%= render 'bulk_email' %>
     </div>
     <div>
       <a href='/api/v1/events/<%= @event_id %>/guests?download'><button class='btn btn-primary'>Export Guest List</button></a>
@@ -257,6 +258,23 @@ emailModal.addEventListener('show.bs.modal', function (event) {
   var modalInput = emailModal.querySelector('#email-to')
   modalInput.value = recipient
 })
+</script>
+
+<script>
+var bulkEmailModal = document.getElementById('bulk-email')
+    bulkEmailModal.addEventListener('show.bs.modal', function () {
+      var forms = document.querySelectorAll("[name=guest_display]");
+      var recipients = "";
+
+       for (var i=0, n=forms.length;i<n;i++) {
+        if (forms[i].elements['guest_selector'].checked) {
+          recipients += forms[i].elements['guest_email'].value+";"
+        }
+       }
+    var bulkModal = document.getElementById('bulk-email')
+    var modalInput = bulkModal.querySelector('#email-to')
+    modalInput.value = recipients
+    })
 </script>
 
 <!--<div id="form-div">

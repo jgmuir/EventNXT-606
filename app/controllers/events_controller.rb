@@ -16,7 +16,7 @@ class EventsController < ApplicationController
                       'total_count - sum(coalesce(committed,0)) as remaining,'\
                       'count(*) filter(where "booked") as total_booked,'\
                       'count(*) filter (where not "booked") as total_not_booked,'\
-                      'count(distinct(guest_id)) as total_guests,'\
+                      'count(distinct(guest_id)) filter(where "allotted" > 0) as total_guests ,'\
                       'sum(coalesce(committed,0)) * price as balance')
               .group('seats.id')
               .where(seats: {event_id: @event.id})
@@ -80,7 +80,7 @@ class EventsController < ApplicationController
                       'total_count - sum(committed) as remaining,'\
                       'count(*) filter(where "booked") as total_booked,'\
                       'count(*) filter (where not "booked") as total_not_booked,'\
-                      'count(distinct(guest_id)) as total_guests,'\
+                      'count(distinct(guest_id)) filter(where "allotted" > 0) as total_guests ,'\
                       'sum(committed) * price as balance')
               .group('seats.id')
               .where(seats: {event_id: params[:event_id]})
