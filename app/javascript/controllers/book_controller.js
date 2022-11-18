@@ -12,6 +12,26 @@ export default class BookController extends IndexController {
     this.formTarget.append(this.submit)
     this.handleSeatCategory()
     this.handleMaxCommittment()
+    this.showExpiry()
+  }
+
+  showExpiry() {
+    let guestData = new FormData();
+    guestData.append('guest_id', this.guestidValue)
+    fetch(`/api/v1/guest/get_expired`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+      method: "POST",
+      body: guestData
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data)
+      if(data){
+      let bookDom = document.getElementById("book")
+      bookDom.innerHTML = "<br><br><h3>The RSVP link has expired. Please go to the FashioNXT events page to book the tickets.</h3>"
+      }
+    })
   }
 
   handleSeatCategory() {

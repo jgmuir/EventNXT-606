@@ -6,6 +6,8 @@ class Event < ApplicationRecord
     has_many :email_templates, dependent: :destroy
     has_one_attached :image, dependent: :purge_later
     has_one_attached :box_office, dependent: :purge_later
+    has_many :sale_tickets, dependent: :destroy
+    has_one :boxoffice_headers, dependent: :destroy
 
     validates :title, presence: true
     validates :address, presence: true

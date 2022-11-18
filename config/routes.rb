@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :seats
   use_doorkeeper do
     skip_controllers :applications, :authorized_applications
   end
@@ -26,13 +27,19 @@ Rails.application.routes.draw do
   post 'events/create_event'
   get 'events/show'
   post 'events/show'
+  post 'email/bulk'
 
   namespace :api, except: [:new, :edit] do
     namespace :v1 do
       resources :users, except: [:create]
-      resources :email, only: [:create]
+      post '/email/bulk' => 'email#bulk'
+      post '/email' => 'email#create'
+      post '/guest/set_expiry' => 'guests#set_expiry'
+      post '/guest/get_expired' => 'guests#get_expired'
       resources :events do
         get '/summary' => 'events#summary'
+        get '/headers/:id' => 'events#headers'
+        get '/dataload/:header/:firstName/:lastName/:email/:seatLevel/:seats' => 'events#dataload'
         resource :guest_referrals, path: :refer, only: [:show, :create]
         resources :guests do
           member do
@@ -42,6 +49,8 @@ Rails.application.routes.draw do
             resource :tickets
           end
         end
+        resources :sale_tickets
+        resources :boxoffice_headers
         resources :email_templates, path: :templates
         resources :referral_rewards, path: :rewards
         resources :referral_summary, only: [:index]
@@ -55,6 +64,8 @@ Rails.application.routes.draw do
     resource :book
     resources :guests
     resources :seating_types
+    resources :sale_tickets
+    resources :boxoffice_headers
   end
 
   

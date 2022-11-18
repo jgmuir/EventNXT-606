@@ -1,7 +1,7 @@
 import IndexController from "controllers/index_controller";
 
 export default class GuestController extends IndexController {
-  static targets = [ 'add', 'seat', 'tooltip' ];
+  static targets = [ 'add', 'seat', 'tooltip', 'expiry' ];
   static values = { seaturl: String };
 
   query() {
@@ -36,6 +36,17 @@ export default class GuestController extends IndexController {
       for (const input of inputs)
         input.setAttribute('form', formid)
     }
+  }
+
+  setRSVPExpiry(e) {
+    fetch(`/api/v1/guest/set_expiry`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+      method: "POST",
+      body: new FormData(this.expiryTarget)
+    }).then(response => this.dispatch('complete_set_expiry'))
+    this.expiryTarget.reset();
   }
 
   genNoGuestMessage() {
@@ -131,6 +142,10 @@ export default class GuestController extends IndexController {
       let guestData = new FormData();
       guestData.append('id', fd.get('id'))
       guestData.append('affiliation', fd.get('affiliation'))
+      guestData.set('first_name',fd.get('first_name'))
+      guestData.set('last_name',fd.get('last_name'))
+      guestData.append('perks', fd.get('perks'))
+      guestData.append('comments', fd.get('comments'))
       guestData.append('checked', fd.get('checked'))
       fetch(`${this.urlValue}/${guestId}`, {
         headers: {

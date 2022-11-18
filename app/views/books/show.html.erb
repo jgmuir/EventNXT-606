@@ -1,22 +1,45 @@
+<style>
+h2 
+{
+  background-color: #80ced6;
+}
+</style>
+
+
 <div id='book' data-controller='book'
     data-book-url-value='/api/v1/events/<%= @event_id %>/guests/<%= @token %>/tickets'
     data-book-eventid-value=<%= @event_id %> data-book-guestid-value=<%= @token %>
     data-book-limit-value=10 data-book-offset-value=0>
+
   <template data-book-target='template'>
     <div>
-      <input type='hidden' name='accept' value=1>
       <input type='hidden' name='id' data-nxt-guest_id>
+      <input type='hidden' name='accept' value=1>
       <input type='hidden' name='seat_id[]' data-nxt-seat_id>
-      <input type='text' disabled data-nxt-category>
-      <input type='number' name='committed[]' min=0 data-nxt-committed>
-      <span>(max. <span data-nxt-allotted></span>)</span>
-    </div>
-  </template>
-  <h3>Book Tickets</h3>
 
-  <p>Enter the number of tickets for each seating level</p>
+      <b>Seating Level:</b>&ensp;<input type='text' disabled data-nxt-category>
+      &ensp;&ensp;
+      &ensp;&ensp;
+      &ensp;&ensp;
+      &ensp;&ensp;
+      &ensp;&ensp;
+
+      <b>No. of tickets:</b>&ensp;<input type='number' name='committed[]' min=0 data-nxt-committed>
+      <span>(maximum tickets: <span data-nxt-allotted></span>)</span>
+
+    </div>
+    <br>
+  </template>
+
+  <h2>HURRY UP!!! BOOK YOUR TICKETS</h2>
+  <br><br> 
+      
+
+  <p><h4>Enter the number of tickets that you would like to book in each seating level:</h4></p><br>
+
+
   <form id='form-book' data-book-target='dom form' data-action='book#sendTickets'>
     <button class='btn btn-outline-success mt-2' type='submit' form='form-book'
-      data-book-target='submit'>Submit</button>
+      data-book-target='submit'><h5>Submit</h5></button>
   </form>
 </div>
