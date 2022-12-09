@@ -4,6 +4,6 @@ class GuestSeatTicket < ApplicationRecord
     
     attribute :allotted, :integer, default: 0
     
-    validates :committed, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: :allotted, only_integer: true, allow_nil: true}
+    validates :committed, numericality: {greater_than_or_equal_to: 0, only_integer: true}
     validates :allotted, numericality: {greater_than_or_equal_to: 0, only_integer: true}
 end

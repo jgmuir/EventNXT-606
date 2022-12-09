@@ -71,7 +71,7 @@
 </style>
 
 <script>
-//JS toggles RSVP Form visibility
+/JS toggles RSVP Form visibility
   function toggle_referral() {
   var button_name = document.getElementById("referral-prepper");
   var x = document.getElementById("referral-contents-toggle");
@@ -83,7 +83,7 @@
     button_name.style.background = "lightgreen";
     x.style.display = "none";
   }
-}
+}/
 
   function guest_table_toggle() {
     var button_name = document.getElementById("guest-list-table-toggle");
@@ -168,61 +168,81 @@ eventModal.addEventListener('show.bs.modal', function (event) {
 </script>
 
 <h2>Manage Seating Levels</h2>
-<div id="seating-table" class='mb-4'>
-  <table class="center">
-  <thead>
-    <th width=199.8>Category</th>
-    <th width=199.8>Total Count</th>
-  </thead>
-  <tbody>
-    <% @seats.each do |seat| %>
-      <tr>
-        <th width="199.8"><%= seat.category %></th>
-        <th width="199.8"><%= seat.total_count %></th>
-      </tr>
-    <% end %>
-  </tbody>
-  </table>
-  <div>
-    <form id='form-seat' class='mb-2' method="post" action="/events/<%= @event.id %>/seating_types">
-      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <table>
-        <tr>
-          <th>
-            <input type="text" name="category">
-          </th>
-          <th>
-            <input type="number" name="total_count">
-          </th>
-        </tr>
-      </table>
-    </form>
-    <button type="submit" value="submit" form='form-seat' class="btn btn-primary">Create Seating Type</button>
+<div class="divTable paleBlueRows">
+  <div class="divTableHeading">
+    <div class="divTableRow">
+      <div class="divTableHead">Category</div>
+      <div class="divTableHead">Total Count</div>
+      <div class="divTableHead">Actions</div>
+    </div>
   </div>
-</div>
+  
+  <div class="divTableBody" >
+    <% @seats.each do |seat| %>
+      <%= content_tag :div, class: 'divTableRow', id: dom_id(seat) do %>
+        <%= render seat %>
+      <% end %>
+    <% end %>
+  </div>
+  <form id='form-seat' class="divTableBody" method="post" action="/events/<%= @event.id %>/seating_types">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class='divTableRow'>
+      <div class="divTableCell Add">
+        <input type="text" name="category">
+      </div>
+      <div class="divTableCell Add">
+        <input type="number" name="total_count">
+      </div>
+      <div class="divTableCell Add">
+        <button type="submit" value="submit" form='form-seat' class="btn btn-primary">+</button>
+      </div>
+    </div>
+  </form>
+</div> 
+<br>
 
+<h4> Box Office Seating </h4>
+<div id='boxoffice-seating' class='mb-4'>
+  <table class="center">
+    <tr>
+      <th width=199.8>Category</th>
+      <th width=199.8>Total Sold</th>
+    </tr>
+    <tbody>
+      <% @boxoffice_seats.each do |result| %>
+        </tr>
+          <th width=199.8><%= result.seat_section %></th>
+          <th width=199.8><%= result.booked_count %></th>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+      
 <h4> Seating Summary Information </h4>
 <div id='seating-summary' class='mb-4'>
   <table class="center">
     <tr>
       <th width=199.8>Category</th>
-      <th width=199.8>Total Committed</th>
+      <th width=199.8>VIP Guests</th>
       <th width=199.8>Total Allotted</th>
-      <th width=199.8>Remaining</th>
-      <th width=199.8>Total Booked</th>
-      <th width=199.8>Total Guests</th>
-      <th width=199.8>Balance</th>
+      <th width=199.8>Total Committed</th>
+      <th width=199.8>Total Sold</th>
+      <th width=199.8>Free Seats</th>
+      
+     
+<!--       <th width=199.8>Balance</th> -->
     </tr>
     <tbody>
       <% @res.each do |result| %>
         <tr>
           <th width=199.8><%= result.category %></th>
-          <th width=199.8><%= result.total_committed %></th>
-          <th width=199.8><%= result.total_allotted%></th>
-          <th width=199.8><%= result.remaining %></th>
-          <th width=199.8><%= result.total_booked %></th>
           <th width=199.8><%= result.total_guests %></th>
-          <th width=199.8><%= result.balance %></th>
+          <th width=199.8><%= result.total_allotted%></th>
+          <th width=199.8><%= result.total_committed %></th>
+          <th width=199.8><%= result.boxoffice_booked %></th>
+          <th width=199.8><%= result.remaining %></th>
+<!--           <th width=199.8><%= result.balance %></th> -->
         </tr>
       <% end %>
     </tbody>
@@ -238,12 +258,23 @@ eventModal.addEventListener('show.bs.modal', function (event) {
       <%= render 'email_template' %>
       <span class='ms-2 me-2'></span>
       <%= render 'email_modal' %>
+      <span class='ms-2 me-2'></span>
+      <%= render 'bulk_email' %>
+      <span class='ms-2 me-2'></span>
+      <%= render 'rsvp_expiry' %>
     </div>
     <div>
       <a href='/api/v1/events/<%= @event_id %>/guests?download'><button class='btn btn-primary'>Export Guest List</button></a>
     </div>
   </div>
   <%= render 'guest_list' %>
+</div>
+
+<h2>Manage Box Office Sales</h2>
+<div class='mb-2'>
+  <%= render 'bulk_referral_email' %>
+  <span class='ms-2 me-2'></span>
+  <%= render 'box_office_data' %>
 </div>
 
 <h2>Manage Referrals</h2>
@@ -259,6 +290,58 @@ emailModal.addEventListener('show.bs.modal', function (event) {
 })
 </script>
 
+<script>
+var bulkEmailModal = document.getElementById('bulk-email')
+    bulkEmailModal.addEventListener('show.bs.modal', function () {
+      var forms = document.querySelectorAll("[name=guest_display]");
+      var recipients = "";
+
+       for (var i=0, n=forms.length;i<n;i++) {
+        if (forms[i].elements['guest_selector'].checked) {
+          recipients += forms[i].elements['guest_email'].value+";"
+        }
+       }
+    var bulkModal = document.getElementById('bulk-email')
+    var modalInput = bulkModal.querySelector('#email-to')
+    modalInput.value = recipients
+    })
+</script>
+
+<script>
+var bulkEmailModal = document.getElementById('bulk-referral-email')
+    bulkEmailModal.addEventListener('show.bs.modal', function () {
+      var forms = document.querySelectorAll("[name=boxoffice_display]");
+      var recipients = "";
+
+       for (var i=0, n=forms.length;i<n;i++) {
+        if (forms[i].elements['boxoffice_selector'].checked) {
+          recipients += forms[i].elements['boxoffice_email'].value+";"
+        }
+       }
+    var bulkModal = document.getElementById('bulk-referral-email')
+    var modalInput = bulkModal.querySelector('#email-to')
+    modalInput.value = recipients
+    })
+</script>
+
+<script>
+var setExpiryModal = document.getElementById('invite-expiry')
+    setExpiryModal.addEventListener('show.bs.modal', function () {
+      var forms = document.querySelectorAll("[name=guest_display]");
+      var recipients = "";
+
+       for (var i=0, n=forms.length;i<n;i++) {
+        if (forms[i].elements['guest_selector'].checked) {
+          recipients += forms[i].elements['guest_email'].value+";"
+        }
+       }
+    var expiryModal = document.getElementById('invite-expiry')
+    var modalInput = expiryModal.querySelector('#set-expiry-to')
+    modalInput.value = recipients
+    console.log(recipients)
+    })
+</script>
+
 <!--<div id="form-div">
 <h3>Import Box Office Data</h3>
 <%= form_tag import_new_spreadsheet_path, multipart: true  do %> 
@@ -271,7 +354,7 @@ emailModal.addEventListener('show.bs.modal', function (event) {
 <% end %>
 </div> -->
 
-<h4 class="display-10" style="text-align: center; color: gray;"> Referral Rewards </h1><br><br>
+<!--<h4 class="display-10" style="text-align: center; color: gray;"> Referral Rewards </h1><br><br>
 <div id="referral">
   <div style="text-align: center;" id="center-referral-button">
     <button type="button" id="referral-prepper" class="btn btn-success btn-rounded" onclick="toggle_referral()">Open Referral Reward Template</button>
@@ -301,8 +384,8 @@ emailModal.addEventListener('show.bs.modal', function (event) {
 
 
 
-    <!--<br><%= button_to "Back to Dashboard", root_path, :class => "btn btn-success btn-rounded", :type => "button", :method => "get" %>-->
+    <br><%= button_to "Back to Dashboard", root_path, :class => "btn btn-success btn-rounded", :type => "button", :method => "get" %>
 
-</div>
+</div>-->
 
-<%= link_to "Back", '/events', class:"btn btn-primary" %><br><br> <!-- question if/what this should change to -->
+<%= link_to "Back", '/events',  style:"height:40px;width:80px", class:"btn btn-primary" %><br><br>

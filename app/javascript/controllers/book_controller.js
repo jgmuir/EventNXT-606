@@ -1,50 +1,98 @@
 import IndexController from "controllers/index_controller";
 
 export default class BookController extends IndexController {
-  static targets = [ 'form', 'submit' ]
-  static values = { eventid: Number, guestid: Number }
+  static targets = [ 'form', 'submit', 'sum' ];
+  static values = { eventid: Number, guestid: Number, sumofall: Number };
 
   preProcess() {
+    this.handleSum()
     this.submit = this.formTarget.firstElementChild.cloneNode(true)
   }
 
   postProcess() {
     this.formTarget.append(this.submit)
-    this.handleSeatCategory()
-    this.handleMaxCommittment()
+    //this.handleSeatCategory()
+    //this.handleMaxCommittment()
+    this.showExpiry()
   }
 
-  handleSeatCategory() {
-    for (const form of this.formTargets) {
-      let seatId = form.querySelector('input[data-nxt-seat_id]').value
-      let categoryDom = form.querySelector('input[data-nxt-category]')
-      fetch(`/api/v1/events/${this.eventidValue}/seats/${seatId}`)
-        .then(response => response.json())
-        .then(data => {
-          categoryDom.value = data['category']
-        })
-    }
-  }
-
-  handleMaxCommittment() {
-    for (const form of this.formTargets) {
-      let inputCommitted = form.querySelector('input[data-nxt-committed]')
-      let maxAllotted = form.querySelector('[data-nxt-allotted]').getAttribute('data-nxt-allotted')
-      inputCommitted.setAttribute('max', maxAllotted)
-    }
-  }
-
-  sendTickets(e) {
-    e.preventDefault()
-    let fd = new FormData(this.formTarget)
-    fetch(`/api/v1/events/${this.eventidValue}/guests/${this.guestidValue}/book`, {
-      method: 'PATCH',
-      body: fd
-    }).then(response => {
-      if (response.ok) {
-        this.disableSubmit()
+  showExpiry() {
+    let guestData = new FormData();
+    guestData.append('guest_id', this.guestidValue)
+    fetch(`/api/v1/guest/get_expired`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+      method: "POST",
+      body: guestData
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data)
+      if(data){
+      let bookDom = document.getElementById("book")
+      bookDom.innerHTML = "<br><br><h3>The RSVP link has expired. Please go to the FashioNXT events page to book the tickets.</h3>"
       }
     })
+  }
+
+  handleSum(){
+    fetch(`/api/v1/events/${this.eventidValue}/guests/${this.guestidValue}/sum_all`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token")
+      }
+    }).then(response => response.json())
+      .then(data => {this.sumofall = data;this.setsum()})
+    }
+
+  setsum()
+  {
+    let elem = this.sumTarget.querySelector(`[data-nxt-sum]`);
+    elem.innerHTML = this.sumofall;
+  }
+
+  handleMaxCommittment()
+  {
+      let inputCommitted = this.sumTarget.querySelector('input[data-nxt-guestcommitted]')
+      let maxAllotted = this.sumofall
+      inputCommitted.setAttribute('max', maxAllotted)
+  }
+
+  updateGuestCommitted() {
+    let inputCommittedValue = this.sumTarget.querySelector('input[data-nxt-guestcommitted]').value
+    fetch(`/api/v1/events/${this.eventidValue}/guests/${this.guestidValue}/${inputCommittedValue}/updateguestcommitted`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+      method: "POST",
+    }).then(response => 'ok')
+      .then(data => {this.sendmail()})
+    this.sumTarget.reset();
+  }
+  
+  
+  sendmail()
+  {
+    fetch(`/api/v1/events/${this.eventidValue}/guests/${this.guestidValue}/countmail`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      }
+    }).then(response => response.json())
+  }
+
+
+  sendTickets(e) {
+    e.preventDefault() 
+    this.handleMaxCommittment()
+    let inputCommittedValue = this.sumTarget.querySelector('input[data-nxt-guestcommitted]').value
+    let inputCommitted = this.sumTarget.querySelector('input[data-nxt-guestcommitted]')
+    if(inputCommittedValue <= this.sumofall)
+    {
+      this.disableSubmit()
+      this.updateGuestCommitted()
+    }
+    else{
+      this.sumTarget.querySelector('input[data-nxt-guestcommitted]').value = 0
+    }
   }
 
   disableSubmit() {

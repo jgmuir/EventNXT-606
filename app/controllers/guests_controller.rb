@@ -18,6 +18,7 @@ class GuestsController < ApplicationController
     puts("Hash Params above! ###################")
     
     GuestMailer.rsvp_invitation_email(event, @guest).deliver_now
+    GuestMailer.referral_email(event, @guest).deliver_now
 		#end of mail module
     @guest.update({:booking_status => 'Invited', :total_booked_num => 0})
     # Guest.update!(params[:id], booking_status: 'Invited')
@@ -121,7 +122,7 @@ class GuestsController < ApplicationController
   private
     def guest_params
       #params.require(:guest).permit(:first_name, :last_name, :event_id, :email_address, :affiliation, 
-      params.permit(:first_name, :last_name, :event_id, :email, :affiliation,
+      params.permit(:first_name, :last_name, :event_id, :email, :affiliation, :perks, :comments,
         :added_by, :type, :category, :max_seats_num, :booked, :total_booked_num)
     end
     

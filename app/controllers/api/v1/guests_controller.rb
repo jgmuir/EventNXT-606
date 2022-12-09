@@ -41,6 +41,51 @@ class Api::V1::GuestsController < Api::V1::ApiController
     else
       render json: guest.errors(), status: :unprocessable_entity
     end
+    template = EmailTemplate.where(name: "Referral Invitation").first
+    gen_email_from_template([current_user.email], guest.email, template)
+    if guest.update({:invited_at => Time.now})
+      head :ok
+    else
+      render json: guest.errors(), status: :unprocessable_entity
+    end
+  end
+   
+
+  def count_all
+    count = Guest.where(event_id: params[:event_id]).count
+    render json: count
+  end
+  
+  def sum_all
+    sum = GuestSeatTicket.where(guest_id: params[:id]).sum(:allotted)
+    render json: sum
+  end
+  
+  
+  def mail
+    sendmail = current_user
+    render json: sendmail
+  end
+  
+  
+  def countmail
+    @event = Event.find(params[:event_id])
+    @guest = Guest.find(params[:id])
+
+    GuestMailer.rsvp_guest_count_email(@event, @guest).deliver_now
+    render json: @event
+    
+  end
+
+
+
+  def updateguestcommitted
+    guest = Guest.find(params[:id])
+    if guest.update({:guestcommitted => params[:sumofall]})
+      head :ok
+    else
+      head :unprocessable_entity
+    end
   end
 
   def book
@@ -77,6 +122,28 @@ class Api::V1::GuestsController < Api::V1::ApiController
     end
   end
   
+  def set_expiry
+    recipientsList = (params[:recipients][0]).split(';').collect.to_a
+    guests = []
+    for recipient in recipientsList do
+      guest = Guest.where(event_id: params[:event_id], email: recipient).collect.to_a
+      guests.push(guest.first)
+    end
+    guests.collect.to_a
+    guests.each{|guest| guest.update({ invite_expiration: params[:expiry_datetime] }) }
+
+    render json: guests, only: [:expiry]
+  end
+
+  def get_expired
+    guest = Guest.find(params[:guest_id])
+    expired = false
+    if guest and guest.invite_expiration < Time.now
+      expired = true
+    end
+    render json: expired
+  end
+
   def create
     guest = Guest.new(guest_params_create)
     guest.save
@@ -106,14 +173,14 @@ class Api::V1::GuestsController < Api::V1::ApiController
 
   def guest_params_update
     params.permit(
-      :email, :first_name, :last_name, :affiliation, :type, 
+      :email, :first_name, :last_name, :affiliation, :perks, :comments, :type, 
       :invite_expiration, :referral_expiration, :invited_at,
       :event_id, :checked)
   end
 
   def guest_params_create
     p = params.permit(
-      :email, :first_name, :last_name, :affiliation, :type,
+      :email, :first_name, :last_name, :affiliation, :perks, :comments, :type,
       :invite_expiration, :referral_expiration, :invited_at,
       :event_id).to_h
     p[:added_by] = current_user.id

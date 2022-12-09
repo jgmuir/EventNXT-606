@@ -30,7 +30,7 @@ class Guest < ApplicationRecord
   def self.to_csv
     guests = all
     CSV.generate(headers: true) do |csv|
-      cols = [:last_name, :first_name, :email, :added_by, :affiliation, :type,
+      cols = [:last_name, :first_name, :email, :added_by, :affiliation, :perks, :comments, :type,
           :booked, :invited_at, :invite_expiration, :referral_expiration]
       csv << cols
       guests.each do |guest|

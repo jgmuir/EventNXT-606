@@ -16,10 +16,14 @@
               <option value=''>Generic</option>
             </select>
             <input type='hidden' type='number' name='event_id' value=<%= @event_id %>>
-            <div class='form-floating mb-2'>
-              <input class='form-control' id='email-from' type='email' name='senders[]'>
+            
+            
+            <div class='form-floating mb-2' data-email-target='from'>
+              <input class='form-control' id='email-from' type='email' name='senders[]' data-nxt-frommail>
               <label for='email-from'>From</label>
             </div>
+            
+            
             <div class='form-floating mb-2'>
               <input class='form-control' id='email-to' type='email' name='recipients[]'>
               <label for='email-to'>To</label>

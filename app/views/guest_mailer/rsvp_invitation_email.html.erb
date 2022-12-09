@@ -4,29 +4,36 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
         <style>
     
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
         .ticket {
             text-align: center;
             border: 3px solid black;
             margin: 100px;
         }
-        #img {
+        img {
             position: relative;
+            background-repeat: no-repeat
             text-align: center;
+            height: 300; 
+            max-width: 100%
+            display:block;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            width: 4000px;
         }
-
+        table {
+          border:2px solid black;
+        }
         
-        #rsvp-button {
+        rsvp-button {
             -webkit-appearance: button;
             -moz-appearance: button;
             appearance: button;
-            padding: 20px;
-            font-size: 20px;
-            text-decoration: none;
-            color: white;
-            background-color: black;
+            text-decoration: none; 
+            color:black; 
+            border: 2px solid #b94c4c; 
+            padding: 10px 30px;
+            font-weight: bold;
         }
         
     </style>
@@ -34,22 +41,21 @@
   <body>
 
     <p>Hi <%= @guest.first_name %>,</p>
-    <p>
-      Congratulations! You're invited by <%= User.find(@guest.added_by).first_name %> to an event.
+    <br>
+    <br>FASHIONNXT
+    <br>Invites you for <%= @event.title %>.</br>
+    <br>
+    <br>TO FOLLOW</br>
     </p>
     <div class="ticket">
-        <h2>Event Title: <%= @event.title %></h2>
-        
-        <p><b>Guest Name: <%= @guest.first_name %></b></p>
+        <img class='w-25 me-2' src='<%= url_for(@event.image) %>' alt='Event image' title='Event Image'>
+      
         <p><b>Event date: <%= @event.datetime %></b></p>
-        <p><b>Number of tickets: <%= $event_tickets.to_s %></b></p>
-        <p><b>Seat Category: <%= %></b></p>
         <p><strong>About Event: </strong><%= @event.description %></p>
-        <br><br><br>
-        <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https'), :id => 'rsvp-button' %>
-        <br><br><br><br>
+        <%= @event.address %>
+        <br>
     </div>  
-    <p>Thank you and have a great day!</p><br>
-    <h2 style="color: white; background-color: lightblue; padding: 15px">EVENTNXT Team</h2>
+    <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https'), :id => 'rsvp-button' %>
+    <p>Looking forward to seeing you there!</p><br>
   </body>
 </html>

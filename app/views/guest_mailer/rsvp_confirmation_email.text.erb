@@ -1,9 +1,13 @@
-Your seat assignment has been confirmed.
+YOUR SEAT ASSIGNMENT HAS BEEN CONFIRMED.
+
+
 Name: <%= @guest.first_name %> <%= @guest.last_name %>
 Event title: <%= @event.title %>
 Event date: <%= @event.datetime %>
 <%= @guest.seats.select(:category).distinct.each do |category| %>
-  Seat Category: <%= category %>
+Seat Category: </strong><%= category %>
 <% end %>
+About Event: <%= @event.description %>
+Event address: <%= @event.address %>
 
-Thanks for joining and have a great day!
+Looking forward to seeing you there!

@@ -30,4 +30,35 @@ RSpec.describe "Api::V1::EmailController", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/email/bulk" do
+    context "there are users that want to send bulk email to guests" do
+      let!(:senders) { create_list :user, 1 }
+      it "should get a successful response" do
+        sender_emails = senders.map { |sender| sender.email }
+        guest_emails = guest_list.map { |guest| guest.email }.join(";")
+        guests = []
+        guests.push(guest_emails+";")
+        p = {senders: sender_emails, recipients: guests.collect.to_a, event_id: event.id,
+             subject: Faker::Lorem.sentence, body: Faker::Lorem.paragraph}
+        post "/api/v1/email/bulk", params: p
+        expect(response).to be_successful
+      end
+    end
+
+    context "there are users that want to send bulk email to guests with a template" do
+      let!(:senders) { create_list :user, 1 }
+      let!(:template) { create :email_template }
+      it "should get a successful response" do
+        sender_emails = senders.map { |sender| sender.email }
+        guest_emails = guest_list.map { |guest| guest.email }.join(";")
+        guests = []
+        guests.push(guest_emails+";")
+        p = {senders: sender_emails, recipients: guests.collect.to_a, event_id: event.id,
+           template_id: template.id}
+        post "/api/v1/email/bulk", params: p
+        expect(response).to be_successful
+      end
+    end
+  end
 end

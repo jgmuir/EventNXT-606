@@ -20,6 +20,15 @@ export default class extends Controller {
       this.create(payload);
     else
       this.update(payload, id.value);
+    let fd = new FormData(this.formTarget)
+    fetch(`/api/v1/events/${this.eventidValue}/guests/${this.guestidValue}/send`, {
+      method: 'GET',
+      body: fd
+    }).then(response => {
+      if (response.ok) {
+        this.disableSubmit()
+      }
+    })
   }
 
   updateBatchFromCheckbox({ params: { payload } }) {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
+ActiveRecord::Schema[7.0].define(version: 202211111668232192) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "boxoffice_headers", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.integer "header_row"
+    t.integer "first_name"
+    t.integer "last_name"
+    t.integer "email"
+    t.integer "seat_section"
+    t.integer "tickets"
+    t.index ["event_id"], name: "index_boxoffice_headers_on_event_id"
+  end
+
+  create_table "boxoffice_seats", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.string "seat_section"
+    t.integer "booked_count"
+    t.index ["event_id"], name: "index_boxoffice_seats_on_event_id"
   end
 
   create_table "email_templates", force: :cascade do |t|
@@ -106,6 +124,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.datetime "invited_at", precision: nil
     t.datetime "emailed_at", precision: nil
     t.boolean "checked", default: false
+    t.string "perks"
+    t.string "comments"
     t.index ["added_by"], name: "index_guests_on_added_by"
     t.index ["email", "event_id"], name: "index_guests_on_email_and_event_id", unique: true
     t.index ["event_id"], name: "index_guests_on_event_id"
@@ -160,6 +180,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
     t.index ["event_id"], name: "index_referral_rewards_on_event_id"
   end
 
+  create_table "sale_tickets", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "seat_section"
+    t.integer "tickets"
+    t.index ["event_id"], name: "index_sale_tickets_on_event_id"
+    t.index ["user_id"], name: "index_sale_tickets_on_user_id"
+  end
+
   create_table "seat_category_details", force: :cascade do |t|
     t.string "event_title"
     t.string "seat_category"
@@ -195,6 +227,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "boxoffice_headers", "events"
+  add_foreign_key "boxoffice_seats", "events"
   add_foreign_key "email_templates", "events"
   add_foreign_key "email_templates", "users"
   add_foreign_key "events", "users"
@@ -210,5 +244,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_20_092609) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "referral_rewards", "events"
+  add_foreign_key "sale_tickets", "events"
+  add_foreign_key "sale_tickets", "users"
   add_foreign_key "seats", "events"
 end

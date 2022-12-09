@@ -1,7 +1,7 @@
 import IndexController from "controllers/index_controller";
 
 export default class GuestController extends IndexController {
-  static targets = [ 'add', 'seat', 'tooltip' ];
+  static targets = [ 'add', 'seat', 'tooltip', 'expiry' ];
   static values = { seaturl: String };
 
   query() {
@@ -36,6 +36,17 @@ export default class GuestController extends IndexController {
       for (const input of inputs)
         input.setAttribute('form', formid)
     }
+  }
+
+  setRSVPExpiry(e) {
+    fetch(`/api/v1/guest/set_expiry`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+      method: "POST",
+      body: new FormData(this.expiryTarget)
+    }).then(response => this.dispatch('complete_set_expiry'))
+    this.expiryTarget.reset();
   }
 
   genNoGuestMessage() {
@@ -131,6 +142,10 @@ export default class GuestController extends IndexController {
       let guestData = new FormData();
       guestData.append('id', fd.get('id'))
       guestData.append('affiliation', fd.get('affiliation'))
+      guestData.set('first_name',fd.get('first_name'))
+      guestData.set('last_name',fd.get('last_name'))
+      guestData.append('perks', fd.get('perks'))
+      guestData.append('comments', fd.get('comments'))
       guestData.append('checked', fd.get('checked'))
       fetch(`${this.urlValue}/${guestId}`, {
         headers: {
@@ -178,5 +193,73 @@ export default class GuestController extends IndexController {
           }
         }
       });
+  }
+  view_guest_seats(e){
+    let form = e.currentTarget
+    console.log(form)
+    let guestId = form.getAttribute('data-nxt-id')
+    console.log("guestId ",guestId)
+
+    fetch(`${this.urlValue}/${guestId}/`)
+
+    .then((response) => {
+      response.json().then(
+        (data) => {
+          console.log("data", data)
+          let name = data.first_name + " " + data.last_name ;
+          document.getElementById('guest-name').innerHTML = "Guest : "+name;
+        });
+    });
+    
+      fetch(`${this.seaturlValue}`)
+
+      .then((response) => {
+        response.json().then(
+          (data) => {
+
+            let map_cat_id = new Map();
+
+            data.forEach((itemData) => {
+              map_cat_id.set(itemData.id, itemData.category);
+            });
+
+            console.log("map_cat_id", map_cat_id)
+
+
+          fetch(`${this.urlValue}/${guestId}/tickets/`).then((response) => {
+            console.log(response);
+            response.json().then(
+              (data) => {
+      
+                console.log("data",data);
+      
+              if (data.length > 0) {
+                var temp = "";
+                data.forEach((itemData) => {
+                  temp += "<tr>";
+                  // temp += "<td>" + itemData.id + "</td>";
+                  // temp += "<td>" + itemData.guest_id + "</td>";
+                  temp += "<td width=199.8>" + map_cat_id.get(itemData.seat_id) + "</td>";
+                  temp += "<td width=199.8>" + itemData.allotted + "</td></tr>";
+                });
+                if(document.getElementById('guest-disp').style.display == 'block'){
+                  console.log("inner-contnet",document.getElementById('data-check').innerHTML) 
+                  document.getElementById('guest-disp').style.display = 'none';
+                }
+
+                else{                
+                    document.getElementById('guest-disp').style.display = 'block';
+                    document.getElementById('data-check').innerHTML = temp;
+      
+                console.log("temp", temp)
+              }
+      
+              }
+            });
+            });
+
+        });
+    });
+    
   }
 }
