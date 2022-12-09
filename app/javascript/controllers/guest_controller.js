@@ -243,8 +243,16 @@ export default class GuestController extends IndexController {
                   temp += "<td width=199.8>" + map_cat_id.get(itemData.seat_id) + "</td>";
                   temp += "<td width=199.8>" + itemData.allotted + "</td></tr>";
                 });
-                document.getElementById('guest-disp').style.display = 'block';
-                document.getElementById('data-check').innerHTML = temp;
+                if(document.getElementById('guest-disp').style.display == 'block'){
+                  document.getElementById('guest-disp').style.display = 'none';
+                }
+
+                else{                
+                    document.getElementById('guest-disp').style.display = 'block';
+                    document.getElementById('data-check').innerHTML = temp;
+      
+                console.log("temp", temp)
+              }
       
               }
             });
