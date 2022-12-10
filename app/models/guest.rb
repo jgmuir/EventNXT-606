@@ -14,7 +14,6 @@ class Guest < ApplicationRecord
   validates :email, presence: true, uniqueness: { scope: :event }
   validates :booked, inclusion: [true, false, nil]
   validates :added_by, presence: true
-  validates :invite_expiration, expiration: true
   validates :referral_expiration, expiration: true
   validate :checked_only_if_booked
 

@@ -5,6 +5,7 @@ export default class BookController extends IndexController {
   static values = { eventid: Number, guestid: Number, sumofall: Number };
 
   preProcess() {
+    this.showExpiry()
     this.handleSum()
     this.submit = this.formTarget.firstElementChild.cloneNode(true)
   }
@@ -13,7 +14,6 @@ export default class BookController extends IndexController {
     this.formTarget.append(this.submit)
     //this.handleSeatCategory()
     //this.handleMaxCommittment()
-    this.showExpiry()
   }
 
   showExpiry() {
