@@ -1,10 +1,28 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class IndexController extends Controller {
-  static targets = [ 'dom', 'template', 'limit', 'offset' ];
-  static values = { url: String, offset: Number, limit: { type: Number, default: 10 }};
+  static targets = [ 'dom', 'template', 'limit', 'offset', 'maxcount' ];
+  static values = { url: String, offset: Number, limit: { type: Number, default: 10 }, countofrec: Number};
 
-  connect() { this.query(); }
+  connect() { 
+    if(this.urlValue.match("guests") || this.urlValue.match("sale_tickets")) 
+      this.getCount();
+    this.query(); 
+  }
+
+  getCount(){
+    fetch(`${this.urlValue}/count_all`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token")
+      }
+    }).then(response => response.json())
+      .then(data => {this.countofrecValue = data;this.setmaxcount()})
+  }
+
+  setmaxcount(){
+      let elem = this.maxcountTarget.querySelector(`[data-nxt-maxcount]`);
+      elem.innerHTML = this.offsetValue + " - " + Math.min(this.offsetValue+this.limitValue,this.countofrecValue) + " of " + this.countofrecValue;
+  }
 
   query() {
     let params = new URLSearchParams({
@@ -153,20 +171,28 @@ export default class IndexController extends Controller {
   }
 
   updateLimit() {
-    if (this.hasLimitTarget)
+    if (this.hasLimitTarget){
       this.limitValue = this.limitTarget.value
+      this.setmaxcount();
+      this.query();
+    }
   }
 
   incrementOffset() {
-    // todo: get max offset based on limit
-    this.offsetValue += this.limitValue;
+    // limit offset based on total number of records in table
+    if((this.offsetValue+this.limitValue)<this.countofrecValue){
+      this.offsetValue += this.limitValue;
+      this.setmaxcount();
+      this.query();
+    }
   }
 
   decrementOffset() {
-    if (this.offsetValue - this.limitValue >= 0)
-      this.offsetValue -= this.limitValue;
+    this.offsetValue = Math.max(this.offsetValue - this.limitValue, 0)
+    this.setmaxcount();
+    this.query();
   }
-
+  
   updateOffset() {
     if (this.hasOffsetTarget)
       this.limitValue = this.offsetTarget.value

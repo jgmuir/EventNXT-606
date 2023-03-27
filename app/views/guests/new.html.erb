@@ -105,6 +105,12 @@ form{
     <label for="affiliation">Affiliation:</label>&nbsp<input type='text' id='affiliation' name='affiliation'><br><br>
   </p>
   <p>
+    <label for="perks">Perks:</label>&nbsp<input type='text' id='perks' name='perks'><br><br>
+    </p>
+  <p>
+    <label for="comments">Comments:</label>&nbsp<input type='text' id='comments' name='comments'><br><br>
+  </p>
+  <p>
     <label for="category">Seat Category:</label>&nbsp<input list="category" name="category">
     <datalist id="category">
       <% @seats.each do |seat|%>
@@ -131,6 +137,8 @@ form{
           <th><input type='text' id='email' name='email'></th>
           <th><!-- blank spot --><th>
           <th><input type='text' id='affiliation' name='affiliation'></th>
+          <th><input type='text' id='perks' name='perks'></th>
+          <th input type = 'text' id = 'comments' name ='comments'></th>
           <th>
             <input list="category" name="category">
             <datalist id="category">

@@ -27,9 +27,73 @@ class Api::V1::EventsController < Api::V1::ApiController
     end
   end
 
+  def headers
+    event = Event.find params[:event_id]
+    header = params[:id]
+    event.box_office.open do |file|
+      sheet = Roo::Spreadsheet.open(file.path)
+      sheet.each_with_index do |row, idx|
+        if idx+1 == header.to_i
+          render json: {row: row}
+          break
+        end
+      end
+    end
+  end
+
+  def dataload
+    event = Event.find params[:event_id]
+    header = params[:header].to_i
+    firstName = params[:firstName].to_i
+    lastName = params[:lastName].to_i
+    email = params[:email].to_i
+    seatLevel = params[:seatLevel].to_i
+    seats = params[:seats].to_i
+
+    event.boxoffice_headers&.destroy
+    event.boxoffice_seats.delete_all
+    boxofficeHeaders = BoxofficeHeaders.new(:event_id => event.id, 
+      :header_row => header,
+      :first_name => firstName,
+      :last_name => lastName,
+      :email => email,
+      :seat_section => seatLevel,
+      :tickets => seats)
+    boxofficeHeaders.save!
+
+    event.sale_tickets.delete_all
+    summary = {}
+    event.box_office.open do |file|
+      sheet = Roo::Spreadsheet.open(file.path)
+      sheet.each_with_index do |row, idx|
+        next if idx < header.to_i
+        next if row[email] == " "
+        if !row[seatLevel].nil? and !row[seatLevel].empty? and !row[seats].nil?
+          summary.store(row[seatLevel], 
+            summary.key?(row[seatLevel]) ? row[seats] + summary[row[seatLevel]] : row[seats])
+        end
+        saleTicket = SaleTicket.new(:event_id => event.id, 
+          :user_id => current_user.id,
+          :first_name => row[firstName],
+          :last_name => row[lastName],
+          :email => row[email],
+          :seat_section => row[seatLevel],
+          :tickets => row[seats])
+        saleTicket.save!
+      end
+    end
+    summary.each do |section, count|
+      boxofficeSeat = BoxofficeSeat.new(:event_id => event.id, 
+        :seat_section => section,
+        :booked_count => count)
+      boxofficeSeat.save!
+    end
+  end
+
   def update
     event = Event.find params[:id]
     update_referral_count event
+    remove_box_office_data event
     event.update(event_params)
     if event.valid?
       event.save
@@ -62,6 +126,7 @@ class Api::V1::EventsController < Api::V1::ApiController
 
   def summary
     res = Seat.left_joins(:guest_seat_tickets, :guests)
+              .joins("LEFT JOIN boxoffice_seats ON boxoffice_seats.seat_section = seats.category")
               .select('seats.category,price,total_count,'\
                       'sum(coalesce(committed,0)) as total_committed,'\
                       'sum(coalesce(allotted,0)) as total_allotted,'\
@@ -71,7 +136,7 @@ class Api::V1::EventsController < Api::V1::ApiController
                       'count(distinct(guest_id)) as total_guests,'\
                       'sum(coalesce(committed,0)) * price as balance')
               .group('seats.id')
-              .where(seats: {event_id: params[:event_id]})
+              .where(seats: {event_id: @event.id}, boxoffice_seats: {event_id: @event.id})
     render json: res, except: [:id]
   end
 
@@ -81,6 +146,13 @@ class Api::V1::EventsController < Api::V1::ApiController
     image_url = url_for(model.image) if model.image.attached?
     box_office_url = url_for(model.box_office) if model.box_office.attached?
     model.as_json.merge({ image_url: image_url, box_office_url: box_office_url })
+  end
+
+  def remove_box_office_data(event)
+    return unless event_params.has_key? :box_office
+    event = Event.find(event.id)
+    event.sale_tickets.delete_all
+    event.boxoffice_seats.delete_all
   end
 
   def update_referral_count(event)
@@ -125,9 +197,37 @@ class Api::V1::EventsController < Api::V1::ApiController
     confirmation_template.is_html = true
     confirmation_template.event_id = event.id
     confirmation_template.user_id = current_user.id
+
+    rsvp_end_template = EmailTemplate.new 
+    rsvp_end_template.name = 'RSVP Expired'
+    rsvp_end_template.subject = '{{event.title}} - RSVP Expired'
+    rsvp_end_template.body = File.read(Rails.root.join('app', 'views', 'guest_mailer', 'rsvp_end_email.html'))
+    rsvp_end_template.is_html = true
+    rsvp_end_template.event_id = event.id
+    rsvp_end_template.user_id = current_user.id
+    
+    referral_template = EmailTemplate.new 
+    referral_template.name = 'Referral Invitation'
+    referral_template.subject = '{{event.title}} - Invitation'
+    referral_template.body = File.read(Rails.root.join('app', 'views', 'guest_mailer', 'referral_invitation_email.html'))
+    referral_template.is_html = true
+    referral_template.event_id = event.id
+    referral_template.user_id = current_user.id
+    
+    purchase_template = EmailTemplate.new 
+    purchase_template.name = 'Purchase Tickets'
+    purchase_template.subject = 'Purchase Tickets'
+    purchase_template.body = File.read(Rails.root.join('app', 'views', 'guest_mailer', 'purchase_tickets_email.html'))
+    purchase_template.is_html = true
+    purchase_template.event_id = event.id
+    purchase_template.user_id = current_user.id
     
     rsvp_template.save
     confirmation_template.save
+    rsvp_end_template.save
+    referral_template.save
+    purchase_template.save
+    
   end
 
   def event_params

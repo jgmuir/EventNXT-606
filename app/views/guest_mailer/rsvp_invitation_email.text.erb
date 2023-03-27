@@ -1,11 +1,12 @@
 Hi <%= @guest.first_name %>,
 
-Congratulations! You're invited by <%= User.find(@guest.added_by).first_name %> to an event.
-Event title: <%= @event.title %>
+FASHIONNXT
+Invites you for <%= @event.title %>
+TO FOLLOW
+<%= (@event.image) %>
 Event date: <%= @event.datetime %>
-Ticket Number: <%= nil %>
-Seat Category: <%= nil %>
+<%= @event.address %>
 
 Please RSVP to confirm attendence with this link: <%= link_to 'RSVP', edit_event_guest_url(@event, @guest, :protocol => 'https') %>.
 
-Thank you and have a great day!
+Looking forward to seeing you there!

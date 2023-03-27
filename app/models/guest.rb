@@ -14,7 +14,6 @@ class Guest < ApplicationRecord
   validates :email, presence: true, uniqueness: { scope: :event }
   validates :booked, inclusion: [true, false, nil]
   validates :added_by, presence: true
-  validates :invite_expiration, expiration: true
   validates :referral_expiration, expiration: true
   validate :checked_only_if_booked
 
@@ -30,7 +29,7 @@ class Guest < ApplicationRecord
   def self.to_csv
     guests = all
     CSV.generate(headers: true) do |csv|
-      cols = [:last_name, :first_name, :email, :added_by, :affiliation, :type,
+      cols = [:last_name, :first_name, :email, :added_by, :affiliation, :perks, :comments, :type,
           :booked, :invited_at, :invite_expiration, :referral_expiration]
       csv << cols
       guests.each do |guest|

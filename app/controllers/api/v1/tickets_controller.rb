@@ -48,10 +48,10 @@ class Api::V1::TicketsController < Api::V1::ApiController
   private
 
   def ticket_create_params
-    p = params.permit(:id, :seat_id, :allotted).to_h
+    p = params.permit(:id, :seat_id, :committed, :allotted).to_h
     p[:guest_id] = p.delete :id
-    p[:committed] = 0
-    p[:allotted] = 1
+    #p[:committed] = 0
+    #p[:allotted] = 1
     logger.debug p
     return p
   end
